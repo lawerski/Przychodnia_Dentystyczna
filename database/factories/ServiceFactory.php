@@ -31,7 +31,7 @@ class ServiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'doctor_id' => fake()->numberBetween(1, $this->maxPossibleDoctorId),
+            'dentist_id' => fake()->numberBetween(1, $this->maxPossibleDoctorId),
             'service_name' => fake()->randomElement([
                 'Konsultacja',
                 'RTG',

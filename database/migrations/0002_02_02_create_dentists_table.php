@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('dentists', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unique('dentists_user_id_unique');
+            $table->foreignId('user_id')->unique('dentists_user_id_unique')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('surname');
             $table->string('specialization');

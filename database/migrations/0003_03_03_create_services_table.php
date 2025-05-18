@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dentists', function (Blueprint $table) {
-            $table->foreign(['user_id'], 'dentists_user_id_fkey')->references(['id'])->on('users')->onUpdate('no action')->onDelete('no action');
+        Schema::create('services', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('dentist_id')->constrained()->cascadeOnDelete();
+            $table->string('service_name');
+            $table->decimal('cost');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('dentists', function (Blueprint $table) {
-            $table->dropForeign('dentists_user_id_fkey');
-        });
+        Schema::dropIfExists('services');
     }
 };

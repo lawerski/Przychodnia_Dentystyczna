@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservations', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('service_id');
-            $table->timestamp('date_time');
-            $table->string('status')->default('pending');
-            $table->timestamp('submitted_at');
+            $table->foreignId('dentist_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->integer('rating');
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reservations');
+        Schema::dropIfExists('reviews');
     }
 };

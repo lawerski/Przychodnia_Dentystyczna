@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class review extends Model
 {
@@ -16,9 +17,18 @@ class review extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'dentist_id',
         'user_id',
-        'doctor_id',
         'rating',
         'comment',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function dentist(): BelongsTo
+    {
+        return $this->belongsTo(Dentist::class);
+    }
 }

@@ -46,7 +46,7 @@ class ReviewFactory extends Factory
     {
         return [
             'user_id' => fake()->numberBetween(1, $this->maxPossibleUserId),
-            'doctor_id' => fake()->numberBetween(1, $this->maxPossibleDoctorId),
+            'dentist_id' => fake()->numberBetween(1, $this->maxPossibleDoctorId),
             'rating' => fake()->numberBetween(1, 5),
             'comment' => fake()->sentence(),
         ];
