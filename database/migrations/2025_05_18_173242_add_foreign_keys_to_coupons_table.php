@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('coupons', function (Blueprint $table) {
             $table->foreign(['user_id'], 'coupons_user_id_fkey')->references(['id'])->on('users')->onUpdate('no action')->onDelete('no action');
+            $table->foreign(['service_id'], 'coupons_service_id_fkey')->references(['id'])->on('services')->onUpdate('no action')->onDelete('no action');
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('coupons', function (Blueprint $table) {
             $table->dropForeign('coupons_user_id_fkey');
+            $table->dropForeign('coupons_service_id_fkey');
         });
     }
 };
