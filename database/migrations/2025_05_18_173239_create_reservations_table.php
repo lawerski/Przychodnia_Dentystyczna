@@ -16,7 +16,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('service_id');
             $table->timestamp('date_time');
-            $table->timestamp('submition_date');
+            $table->string('status')->default('pending');
+            $table->timestamp('submitted_at');
             $table->timestamps();
         });
     }
