@@ -24,10 +24,12 @@ class Coupon extends Model
         'valid_until',
         'is_used',
     ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);

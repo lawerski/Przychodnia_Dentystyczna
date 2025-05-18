@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ReviewFactory extends Factory
 {
     protected int $maxPossibleUserId = 0;
+    protected int $maxPossibleDentistId = 0;
 
     /**
      * Set the maximum possible user ID.
@@ -23,17 +24,16 @@ class ReviewFactory extends Factory
         return $this;
     }
 
-    protected int $maxPossibleDoctorId = 0;
     /**
-     * Set the maximum possible doctor ID.
+     * Set the maximum possible dentist ID.
      *
-     * @param int $maxPossibleDoctorId
+     * @param int $maxPossibleDentistId
      * @return $this
      */
 
-    public function withMaxPossibleDoctorId(int $maxPossibleDoctorId): self
+    public function withMaxPossibleDentistId(int $maxPossibleDentistId): self
     {
-        $this->maxPossibleDoctorId = $maxPossibleDoctorId;
+        $this->maxPossibleDentistId = $maxPossibleDentistId;
         return $this;
     }
 
@@ -46,7 +46,7 @@ class ReviewFactory extends Factory
     {
         return [
             'user_id' => fake()->numberBetween(1, $this->maxPossibleUserId),
-            'dentist_id' => fake()->numberBetween(1, $this->maxPossibleDoctorId),
+            'dentist_id' => fake()->numberBetween(1, $this->maxPossibleDentistId),
             'rating' => fake()->numberBetween(1, 5),
             'comment' => fake()->sentence(),
         ];

@@ -53,14 +53,17 @@ class User extends Authenticatable
     {
         return $this->hasOne(Dentist::class, 'dentist_id', 'id');
     }
+
     public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
     }
+
     public function coupons(): HasMany
     {
         return $this->hasMany(Coupon::class);
     }
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);

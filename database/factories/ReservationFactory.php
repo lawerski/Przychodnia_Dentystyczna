@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ReservationFactory extends Factory
 {
     protected int $maxPossibleServiceId = 0;
+    protected int $maxPossibleUserId = 0;
+
     /**
      * Set the maximum possible service ID.
      *
@@ -21,8 +23,6 @@ class ReservationFactory extends Factory
         $this->maxPossibleServiceId = $maxPossibleServiceId;
         return $this;
     }
-
-    protected int $maxPossibleUserId = 0;
 
     /**
      * Set the maximum possible user ID.

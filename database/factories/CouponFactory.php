@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class CouponFactory extends Factory
 {
     protected int $maxPossibleUserId = 0;
+    protected int $maxPossibleServiceId = 0;
 
     /**
      * Set the maximum possible user ID.
@@ -23,7 +24,6 @@ class CouponFactory extends Factory
         return $this;
     }
 
-    protected int $maxPossibleServiceId = 0;
     /**
      * Set the maximum possible service ID.
      *

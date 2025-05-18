@@ -10,6 +10,7 @@ use App\Models\Service;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,15 +30,16 @@ class DatabaseSeeder extends Seeder
             // setting dentists count to users count instead
             $dentists = $users;
         }
+        // Users password is set to 'password'
         User::factory()->count($users)->create();
         Dentist::factory()->count($dentists)->withMaxPossibleUserId($users)->create();
-        Service::factory()->count($services)->withMaxPossibleDoctorId($dentists)->create();
-        Review::factory()->count($reviews)->withMaxPossibleUserId($users)->withMaxPossibleDoctorId($dentists)->create();
+        Service::factory()->count($services)->withMaxPossibleDentistId($dentists)->create();
+        Review::factory()->count($reviews)->withMaxPossibleUserId($users)->withMaxPossibleDentistId($dentists)->create();
         Coupon::factory()->count($coupons)->withMaxPossibleUserId($users)->withMaxPossibleServiceId($services)->create();
         Reservation::factory()->count($reservations)->withMaxPossibleUserId($users)->withMaxPossibleServiceId($services)->create();
 
         User::factory()->create([
-            'username' => 'AdminUser',
+            'username' => 'Admin',
             'email' => 'test@example.com',
             'phone' => '1234567890',
             'password' => bcrypt('1234'), // password

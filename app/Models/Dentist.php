@@ -29,10 +29,12 @@ class Dentist extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
     public function services(): HasMany
     {
         return $this->hasMany(Service::class);
     }
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);

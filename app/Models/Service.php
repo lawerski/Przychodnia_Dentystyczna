@@ -27,10 +27,12 @@ class Service extends Model
     {
         return $this->belongsTo(Dentist::class);
     }
+
     public function coupons(): HasMany
     {
         return $this->hasMany(Coupon::class);
     }
+
     public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);

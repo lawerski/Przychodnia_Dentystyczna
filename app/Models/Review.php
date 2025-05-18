@@ -27,6 +27,7 @@ class review extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function dentist(): BelongsTo
     {
         return $this->belongsTo(Dentist::class);

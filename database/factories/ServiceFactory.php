@@ -9,29 +9,29 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ServiceFactory extends Factory
 {
-    protected int $maxPossibleDoctorId = 0;
+    protected int $maxPossibleDentistId = 0;
+
     /**
-     * Set the maximum possible doctor ID.
+     * Set the maximum possible dentist ID.
      *
-     * @param int $maxPossibleDoctorId
+     * @param int $maxPossibleDentistId
      * @return $this
      */
-
-    public function withMaxPossibleDoctorId(int $maxPossibleDoctorId): self
+    public function withMaxPossibleDentistId(int $maxPossibleDentistId): self
     {
-        $this->maxPossibleDoctorId = $maxPossibleDoctorId;
+        $this->maxPossibleDentistId = $maxPossibleDentistId;
         return $this;
     }
+
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-
     public function definition(): array
     {
         return [
-            'dentist_id' => fake()->numberBetween(1, $this->maxPossibleDoctorId),
+            'dentist_id' => fake()->numberBetween(1, $this->maxPossibleDentistId),
             'service_name' => fake()->randomElement([
                 'Konsultacja',
                 'RTG',
