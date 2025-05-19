@@ -23,6 +23,9 @@ class Dentist extends Model
         'surname',
         'specialization',
         'license_number',
+        'phone',
+        'photo',
+        'exprience',
     ];
 
     public function user(): BelongsTo

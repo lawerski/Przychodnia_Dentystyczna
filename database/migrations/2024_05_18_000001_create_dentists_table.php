@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('specialization');
+            $table->string('photo');
+            $table->string('experience');
             $table->string('license_number')->unique('dentists_license_number_unique');
             $table->timestamps();
         });
