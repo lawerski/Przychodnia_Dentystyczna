@@ -23,6 +23,7 @@ class UserController extends Controller
     // Zapisz nowego użytkownika
     public function store(Request $request)
     {
+        try {
         $validated = $request->validate([
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|email|max:255|unique:users',
@@ -34,6 +35,13 @@ class UserController extends Controller
         User::create($validated);
 
         return redirect()->route('admin.users.index')->with('success', 'Użytkownik dodany.');
+        }
+        catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->validator)->withInput();
+        }
+        catch (\Exception $e) {
+            return back()->with('error', 'Wystąpił błąd podczas dodawania użytkownika.')->withInput();
+        }
     }
 
     // Formularz edycji użytkownika
@@ -45,6 +53,7 @@ class UserController extends Controller
     // Aktualizuj użytkownika
     public function update(Request $request, User $user)
     {
+        try {
         $validated = $request->validate([
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
@@ -52,14 +61,23 @@ class UserController extends Controller
             'password' => 'nullable|string|min:4',
             'type' => 'required|in:admin,dentist,patient',
         ]);
-        if ($validated['password']) {
+
+        if (!empty($validated['password'])) {
             $validated['password'] = bcrypt($validated['password']);
         } else {
             unset($validated['password']);
         }
+
         $user->update($validated);
 
         return redirect()->route('admin.users.index')->with('success', 'Użytkownik zaktualizowany.');
+    }
+    catch (\Illuminate\Validation\ValidationException $e) {
+        return back()->withErrors($e->validator)->withInput();
+    }
+    catch (\Exception $e) {
+        return back()->with('error', 'Wystąpił błąd podczas aktualizacji użytkownika.')->withInput();
+    }
     }
 
     // Usuń użytkownika
