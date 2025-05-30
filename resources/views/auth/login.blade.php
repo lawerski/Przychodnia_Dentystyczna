@@ -14,7 +14,13 @@
             <input type="password" name="password" class="form-control" required>
         </div>
         @if($errors->any())
-            <div class="alert alert-danger">{{ $errors->first() }}</div>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
         <button type="submit" class="btn btn-primary">Zaloguj</button>
     </form>
