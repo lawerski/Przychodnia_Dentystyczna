@@ -1,3 +1,21 @@
+
+@if (session('accepted'))
+    <div class="alert alert-success fade-message" role="alert" onclick="this.remove()">
+        {{ session('accepted') }}
+    </div>
+@endif
+@if (session('rejected'))
+    <div class="alert" style="background-color: #ffc107; color: #212529;" role="alert" onclick="this.remove()">
+        {{ session('rejected') }}
+    </div>
+@endif
+@if (session('error'))
+    <div class="alert alert-danger fade-message" role="alert" onclick="this.remove()">
+        {{ session('error') }}
+    </div>
+@endif
+
+
 @if (count($procedures) === 0)
     <div class="alert alert-info" role="alert">
         Brak zapisanych zabiegów.
@@ -10,10 +28,8 @@
                 <th>Pacjent</th>
                 <th>Data</th>
                 <th>Status</th>
-                @if ($procedures->contains('status', 'oczekująca'))
-                    <th>Akceptuj</th>
-                    <th>Odrzuć</th>
-                @endif
+                <th>Akceptuj</th>
+                <th>Odrzuć</th>
             </tr>
         </thead>
         <tbody>
@@ -34,15 +50,24 @@
                             {{ $procedure['status'] }}
                         </span>
                     </td>
-                    {{-- Status pending does not appear in history --}}
                     @if ( $procedure['status'] === 'oczekująca')
                         <td class="p-1 align-middle">
-                            {{-- TODO: Add route --}}
-                            <a href="" class="btn btn-primary btn-sm px-2 py-1">Akceptuj</a>
+                            <form action="{{ route('reservation.accept', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-primary btn-sm px-2 py-1">Akceptuj</button>
+                            </form>
                         </td>
                         <td class="p-1 align-middle">
-                            <a href="" class="btn btn-danger btn-sm px-2 py-1">Odrzuć</a>
+                            <form action="{{ route('reservation.decline', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-danger btn-sm px-2 py-1">Odrzuć</button>
+                            </form>
                         </td>
+                    @else
+                        <td class="p-1 align-middle"></td>
+                        <td class="p-1 align-middle"></td>
                     @endif
                 </tr>
             @endforeach
