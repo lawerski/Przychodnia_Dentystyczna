@@ -1,6 +1,6 @@
 @include('shared.html')
 
-@include('shared.head', ['pageTitle' => 'Nadchodzące zabiegów'])
+@include('shared.head', ['pageTitle' => 'Nadchodzące zabiegi'])
 
 <body>
     @include('shared.dentist.navbar')

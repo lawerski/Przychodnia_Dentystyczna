@@ -48,7 +48,7 @@ class ReservationFactory extends Factory
             'service_id' => fake()->numberBetween(1, $this->maxPossibleServiceId),
             'date_time' => fake()->dateTimeBetween('-1 month', '+1 month'),
             'submitted_at' => fake()->dateTimeBetween('-1 month', 'now'),
-            'status' => fake()->randomElement(['oczekująca', 'potwierdzona', 'anulowana', 'wykonana', 'odrzucona']),
+            'status' => fake()->randomElement(['oczekująca', 'potwierdzona', 'anulowana', 'wykonana']),
         ];
     }
 }

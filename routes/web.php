@@ -16,5 +16,4 @@ Route::controller(DentistPanelController::class)->group(function () {
 });
 Route::controller(ReservationController::class)->group(function () {
     Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
-    Route::put('/reservation/{reservation}/reject', 'decline')->name('reservation.decline');
 });

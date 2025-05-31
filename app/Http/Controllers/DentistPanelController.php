@@ -12,7 +12,6 @@ class DentistPanelController extends Controller
     // In case the names change in the future only this needs to be updated
     private $completed = 'wykonana';
     private $cancelled = 'anulowana';
-    private $rejected = 'odrzucona';
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
     public function show()
@@ -25,7 +24,7 @@ class DentistPanelController extends Controller
         }
         $offeredServicesIds = $dentist->services->pluck('id');
         $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
-            ->whereIn('status', [$this->completed, $this->cancelled, $this->rejected])
+            ->whereIn('status', [$this->completed, $this->cancelled])
             ->count();
         $upcomingProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
@@ -49,15 +48,15 @@ class DentistPanelController extends Controller
         }
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
-            ->whereIn('status', [$this->cancelled, $this->completed, $this->rejected])
+            ->whereIn('status', [$this->cancelled, $this->completed])
             ->with(['user', 'service'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('date_time', 'asc')
             ->get()
             ->map(function ($reservation) {
             return [
                 'patient_name' => $reservation->user->username ?? '',
                 'service_name' => $reservation->service->service_name ?? '',
-                'date' => $reservation->created_at->format('Y-m-d H:i'),
+                'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
                 'status' => $reservation->status,
             ];
             });
@@ -82,13 +81,13 @@ class DentistPanelController extends Controller
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
             ->with(['user', 'service'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('date_time', 'asc')
             ->get()
             ->map(function ($reservation) {
             return [
                 'patient_name' => $reservation->user->username ?? '',
                 'service_name' => $reservation->service->service_name ?? '',
-                'date' => $reservation->created_at->format('Y-m-d H:i'),
+                'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
                 'status' => $reservation->status,
                 'reservation' => $reservation,
             ];
