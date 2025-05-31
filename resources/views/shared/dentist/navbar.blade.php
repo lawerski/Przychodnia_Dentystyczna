@@ -14,7 +14,7 @@
                     <a class="nav-link" href="{{ route('dentist.upcoming') }}">Nadchodzące zabiegi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Oceny</a>
+                    <a class="nav-link" href="{{ route('dentist.reviews') }}">Oceny</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
