@@ -19,12 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = 50;
+        $users = 250;
         $dentists = 20;
         $services = 100;
         $reviews = 200;
         $coupons = 10;
-        $reservations = 50;
+        $reservations = 5000;
         if ($users < $dentists) {
             // There can't be more dentists than users
             // setting dentists count to users count instead
@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
         Reservation::factory()->count($reservations)->withMaxPossibleUserId($users)->withMaxPossibleServiceId($services)->create();
 
         User::factory()->create([
+            'id' => 999,
             'username' => 'Admin',
             'email' => 'test@example.com',
             'phone' => '1234567890',
