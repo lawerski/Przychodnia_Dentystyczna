@@ -16,6 +16,7 @@ Route::controller(DentistPanelController::class)->group(function () {
     Route::get('/dentist/history', 'history')->name('dentist.history');
     Route::get('/dentist/upcoming', 'upcoming')->name('dentist.upcoming');
     Route::get('/dentist', 'show')->name('dentist.show');
+    Route::get('/dentist/calendar', 'calendar')->name('dentist.calendar');
 });
 Route::controller(ReservationController::class)->group(function () {
     Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');

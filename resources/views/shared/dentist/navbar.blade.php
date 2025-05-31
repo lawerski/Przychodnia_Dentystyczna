@@ -14,6 +14,9 @@
                     <a class="nav-link" href="{{ route('dentist.upcoming') }}">Nadchodzące zabiegi</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dentist.calendar') }}">Kalendarz zabiegów</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="">Oceny</a>
                 </li>
             </ul>

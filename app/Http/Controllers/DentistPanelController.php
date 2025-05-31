@@ -97,4 +97,32 @@ class DentistPanelController extends Controller
             'procedures' => $procedures,
         ]);
     }
+
+    /**
+     * Get data for calendar view.
+     */
+    public function calendar()
+    {
+        // TODO: Get the dentist ID and authenticate the user
+        $dentist = Dentist::first();
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
+        $offeredServicesIds = $dentist->services->pluck('id');
+        $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
+            ->whereIn('status', [$this->pending, $this->confirmed])
+            ->with(['user', 'service'])
+            ->orderBy('date_time', 'asc')
+            ->get()
+            ->map(function ($reservation) {
+            return [
+                'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
+            ];
+            });
+
+        return view('dentist.calendar', [
+            'procedures' => $procedures,
+        ]);
+    }
 }
