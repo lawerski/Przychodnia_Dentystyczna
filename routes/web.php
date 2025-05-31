@@ -14,3 +14,4 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('/admin', [AdminPanelController::class, 'index'])->middleware('auth')->name('admin.dashboard');
+Route::get('/dentist', [DentistPanelController::class, 'index'])->middleware('auth')->name('dentist.dashboard');
