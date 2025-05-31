@@ -1,13 +1,13 @@
 @include('shared.html')
 
-@include('shared.head', ['pageTitle' => 'Historia zabiegów'])
+@include('shared.head', ['pageTitle' => 'Nadchodzące zabiegów'])
 
 <body>
     @include('shared.dentist.navbar')
 
     <div class="container mt-5 mb-5">
-        <h1 class="mt-4">Historia zabiegów</h1>
-        <p>W tej sekcji możesz przeglądać historię swoich zabiegów.</p>
+        <h1 class="mt-4">Nadchodzące zabiegi</h1>
+        <p>W tej sekcji możesz przeglądać nadchodzące zabiegi.</p>
 
         @include('shared.dentist.procedures', ['procedures' => $procedures])
     </div>
