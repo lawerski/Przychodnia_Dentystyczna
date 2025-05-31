@@ -19,7 +19,10 @@ class DentistPanelController extends Controller
     {
         // TODO: Get the dentist ID and authenticate the user
         $dentist = Dentist::first();
-
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
         $offeredServicesIds = $dentist->services->pluck('id');
         $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->completed, $this->cancelled, $this->rejected])
@@ -40,6 +43,10 @@ class DentistPanelController extends Controller
     {
         // TODO: Get the dentist ID and authenticate the user
         $dentist = Dentist::first();
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->cancelled, $this->completed, $this->rejected])
@@ -67,6 +74,10 @@ class DentistPanelController extends Controller
     {
         // TODO: Get the dentist ID and authenticate the user
         $dentist = Dentist::first();
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
@@ -79,6 +90,7 @@ class DentistPanelController extends Controller
                 'service_name' => $reservation->service->service_name ?? '',
                 'date' => $reservation->created_at->format('Y-m-d H:i'),
                 'status' => $reservation->status,
+                'reservation' => $reservation,
             ];
             });
 
