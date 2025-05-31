@@ -15,6 +15,24 @@ class DentistPanelController extends Controller
     private $rejected = 'odrzucona';
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
+    public function show()
+    {
+        // TODO: Get the dentist ID and authenticate the user
+        $dentist = Dentist::first();
+
+        $offeredServicesIds = $dentist->services->pluck('id');
+        $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
+            ->whereIn('status', [$this->completed, $this->cancelled, $this->rejected])
+            ->count();
+        $upcomingProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
+            ->whereIn('status', [$this->pending, $this->confirmed])
+            ->count();
+        return view('dentist.show', [
+            'dentist' => $dentist,
+            'completed_procedures_count' => $completedProceduresCount,
+            'upcoming_procedures_count' => $upcomingProceduresCount,
+        ]);
+    }
     /**
      * Display the history of procedures for a specific dentist.
      */
