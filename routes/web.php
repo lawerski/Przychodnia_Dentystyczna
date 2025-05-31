@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\DentistPanelController;
 use App\Http\Controllers\ReservationController;
 use App\Models\Reservation;
