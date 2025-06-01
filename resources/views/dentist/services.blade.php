@@ -28,8 +28,8 @@
                                     <td>{{ $service->service_name }}</td>
                                     <td>{{ $service->cost }}</td>
                                     <td>
-                                        <a href="{{ route('dentist.dashboard', $service->id) }}" class="btn btn-primary btn-sm">Edytuj</a>
-                                        <form action="{{ route('dentist.dashboard', $service->id) }}" method="POST" style="display:inline;">
+                                        <a href="{{ route('service.edit', $service) }}" class="btn btn-primary btn-sm">Edytuj</a>
+                                        <form action="{{ route('dentist.dashboard', $service) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Usuń</button>

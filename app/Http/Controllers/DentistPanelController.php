@@ -178,5 +178,4 @@ class DentistPanelController extends Controller
             'services' => $services,
         ]);
     }
-
 }

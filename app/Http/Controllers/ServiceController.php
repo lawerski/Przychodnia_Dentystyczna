@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use App\Http\Controllers\Controller;
+use App\Models\Dentist;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -45,7 +46,25 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        //
+        $isAdmin = auth()->user()->type === 'admin';
+
+        if ($isAdmin){
+            $dentists = Dentist::all();
+            return view('service.admin.edit', [
+                'service' => $service,
+                'dentists' => $dentists,
+            ]);
+        } else {
+            $dentist = $service->dentist;
+            $dentistName = $dentist->name ?? '';
+            $dentistSurname = $dentist->surname ?? '';
+            $dentistSpecialization = $dentist->specialization ?? '';
+            $dentistText = $dentistName . ' ' . $dentistSurname . ' - ' . $dentistSpecialization;
+            return view('service.dentist.edit', [
+                'service' => $service,
+                'dentist_name' => $dentistText,
+            ]);
+        }
     }
 
     /**
@@ -53,7 +72,7 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service)
     {
-        //
+        // TODO: Validate if service is edited by admin or dentist who owns it
     }
 
     /**
