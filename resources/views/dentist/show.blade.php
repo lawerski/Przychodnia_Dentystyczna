@@ -34,6 +34,28 @@
                 <a href="{{ route('dentist.history') }}" class="btn btn-secondary">Zobacz historię zabiegów</a>
             </div>
         </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h2>Opinie i oceny</h2>
+                <p>Przeglądaj opinie pacjentów na temat Twojej pracy.</p>
+                <a href="{{ route('dentist.reviews') }}" class="btn btn-success">Zobacz opinie</a>
+            </div>
+        </div>
+        <div class="row mt-4">
+            @foreach($reviews as $review)
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body position-relative">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title mb-2">Anonimowy użytkownik {{ $review['rating'] }}/5</h5>
+                                <small class="text-muted" style="font-size: 0.9rem;">{{ $review['created_at'] }}</small>
+                            </div>
+                            <p class="card-text mt-3">{{ $review['comment'] }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
     @include('shared.footer')
 </body>
