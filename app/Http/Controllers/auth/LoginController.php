@@ -19,10 +19,18 @@ public function showLoginForm()
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/admin/users');
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        $user = Auth::user();
+        if ($user->type === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->type === 'dentist') {
+            return redirect()->route('dentist.dashboard');
+        } elseif ($user->type === 'patient') {
+            return redirect()->route('patient.dashboard');
         }
+        return redirect('/'); // fallback
+    }
 
         return back()->withErrors([
             'email' => 'Podane dane są nieprawidłowe.',

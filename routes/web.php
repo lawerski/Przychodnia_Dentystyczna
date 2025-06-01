@@ -9,38 +9,39 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\PatientPanelController;
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+
+// Panel admina
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
-
+    Route::get('/', [AdminPanelController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
 });
 
-Route::controller(DentistPanelController::class)->group(function () {
-    Route::get('/dentist/history', 'history')->name('dentist.history');
-    Route::get('/dentist/upcoming', 'upcoming')->name('dentist.upcoming');
-    Route::get('/dentist', 'show')->name('dentist.show');
+// Panel pacjenta
+Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->group(function () {
+    Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
 });
+
+// Panel dentysty
+Route::middleware(['auth', 'dentist'])->prefix('dentist')->name('dentist.')->group(function () {
+    Route::get('/', [DentistPanelController::class, 'show'])->name('show');
+    Route::get('/profile', [DentistPanelController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile', [DentistPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/history', [DentistPanelController::class, 'history'])->name('history');
+    Route::get('/upcoming', [DentistPanelController::class, 'upcoming'])->name('upcoming');
+});
+
+// Rezerwacje
 Route::controller(ReservationController::class)->group(function () {
     Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
 });
 
+// Autoryzacja
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
-
-
-
-
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminPanelController::class, 'index'])->name('admin.dashboard');
-});
-
-Route::middleware(['auth', 'dentist'])->group(function () {
-    Route::get('/dentist', [DentistPanelController::class, 'show'])->name('dentist.dashboard');
-});
-
-Route::middleware(['auth', 'patient'])->group(function () {
-    Route::get('/patient', [PatientPanelController::class, 'index'])->name('patient.dashboard');
-});
-
