@@ -135,4 +135,22 @@ class DentistPanelController extends Controller
             }),
         ]);
     }
+    /**
+     * Offered procedures.
+     */
+    public function services()
+    {
+        // TODO: Get the dentist ID and authenticate the user
+        $dentist = Dentist::first();
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
+        $services = $dentist->services;
+
+        return view('dentist.services', [
+            'services' => $services,
+        ]);
+    }
+
 }
