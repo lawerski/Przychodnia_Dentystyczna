@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Dentist;
 use App\Models\Reservation;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class DentistPanelController extends Controller
@@ -29,10 +30,24 @@ class DentistPanelController extends Controller
         $upcomingProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
             ->count();
+
+        $reviews = Review::where('dentist_id', $dentist->id)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get()
+            ->map(function ($review) {
+                return [
+                    'rating' => $review->rating,
+                    'comment' => $review->comment,
+                    'created_at' => \Carbon\Carbon::parse($review->created_at)->format('Y-m-d'),
+                ];
+            });
+
         return view('dentist.show', [
             'dentist' => $dentist,
             'completed_procedures_count' => $completedProceduresCount,
             'upcoming_procedures_count' => $upcomingProceduresCount,
+            'reviews' => $reviews,
         ]);
     }
     /**
@@ -122,5 +137,28 @@ class DentistPanelController extends Controller
         $user->update($validated);
 
         return back()->with('success', 'Dane zostały zaktualizowane.');
+    }
+    /**
+     * Get anonimized reviews for dentist.
+     */
+    public function reviews()
+    {
+        // TODO: Get the dentist ID and authenticate the user
+        $dentist = Dentist::first();
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
+        $reviews = Review::where('dentist_id', $dentist->id);
+
+        return view('dentist.review', [
+            'reviews' => $reviews->get()->map(function ($review) {
+                return [
+                    'rating' => $review->rating,
+                    'comment' => $review->comment,
+                    'created_at' => \Carbon\Carbon::parse($review->created_at)->format('Y-m-d'),
+                ];
+            }),
+        ]);
     }
 }
