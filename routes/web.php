@@ -26,13 +26,6 @@ Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->gro
 });
 
 // Panel dentysty
-Route::middleware(['auth', 'dentist'])->prefix('dentist')->name('dentist.')->group(function () {
-    Route::get('/', [DentistPanelController::class, 'show'])->name('dashboard');
-    Route::get('/profile', [DentistPanelController::class, 'editProfile'])->name('profile.edit');
-    Route::post('/profile', [DentistPanelController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/history', [DentistPanelController::class, 'history'])->name('history');
-    Route::get('/upcoming', [DentistPanelController::class, 'upcoming'])->name('upcoming');
-
 Route::middleware(['auth', 'dentist'])->group(function () {
     Route::controller(DentistPanelController::class)->group(function () {
         Route::get('/dentist/history', 'history')->name('dentist.history');
@@ -43,15 +36,6 @@ Route::middleware(['auth', 'dentist'])->group(function () {
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
     });
-
-});
-
-// Rezerwacje
-Route::controller(ReservationController::class)->group(function () {
-    Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', UserController::class);
-
 });
 
 // Autoryzacja
