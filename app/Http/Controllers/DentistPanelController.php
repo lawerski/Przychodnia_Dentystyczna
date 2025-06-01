@@ -7,7 +7,7 @@ use App\Models\Dentist;
 use App\Models\Reservation;
 use App\Models\Review;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class DentistPanelController extends Controller
 {
     // In case the names change in the future only this needs to be updated
@@ -113,6 +113,30 @@ class DentistPanelController extends Controller
         ]);
     }
 
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('dentist.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $validated = $request->validate([
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:255',
+            'password' => 'nullable|string|min:4|confirmed',
+        ]);
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+        $user->update($validated);
+
+        return back()->with('success', 'Dane zostały zaktualizowane.');
+    }
     /**
      * Get data for calendar view.
      */
