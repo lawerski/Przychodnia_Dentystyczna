@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Dentist;
 use Illuminate\Http\Request;
 
@@ -70,9 +71,12 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Service $service)
+    public function update(UpdateServiceRequest $request, Service $service)
     {
-        // TODO: Validate if service is edited by admin or dentist who owns it
+        $service->update($request->validated());
+
+        return redirect()->route('service.edit', $service)
+            ->with('success', 'Usługa została zaktualizowana pomyślnie.');
     }
 
     /**

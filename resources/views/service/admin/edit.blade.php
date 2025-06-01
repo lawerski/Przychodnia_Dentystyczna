@@ -4,7 +4,21 @@
 
 @include('shared.admin.navbar')
 
-<form action="{{ route('service.edit', $service->id) }}" method="POST" class="container mt-4" style="max-width: 600px;">
+@if(session('success'))
+    <div class="alert alert-success container mt-4" style="max-width: 600px;" id="success-alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
+    </div>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger container mt-4" style="max-width: 600px;" id="error-alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('error-alert').remove();"></button>
+    </div>
+@endif
+
+
+<form action="{{ route('service.update', $service->id) }}" method="POST" class="container mt-4" style="max-width: 600px;">
     @csrf
     @method('PUT')
 

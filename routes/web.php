@@ -51,3 +51,4 @@ Route::post('register', [RegisterController::class, 'register']);
 
 // Services
 Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('service.edit');
+Route::put('/service/{service}', [ServiceController::class, 'update'])->name('service.update');
