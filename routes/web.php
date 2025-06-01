@@ -27,7 +27,7 @@ Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->gro
 
 // Panel dentysty
 Route::middleware(['auth', 'dentist'])->prefix('dentist')->name('dentist.')->group(function () {
-    Route::get('/', [DentistPanelController::class, 'show'])->name('show');
+    Route::get('/', [DentistPanelController::class, 'show'])->name('dashboard');
     Route::get('/profile', [DentistPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [DentistPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/history', [DentistPanelController::class, 'history'])->name('history');
