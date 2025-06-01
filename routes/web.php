@@ -32,6 +32,8 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist/upcoming', 'upcoming')->name('dentist.upcoming');
         Route::get('/dentist/reviews', 'reviews')->name('dentist.reviews');
         Route::get('/dentist', 'show')->name('dentist.dashboard');
+        Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
+        Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
     });
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
