@@ -8,6 +8,19 @@
         <h1 class="mt-4">Zabiegi dentystyczne</h1>
         <p>W tej sekcji możesz przeglądać i zarządzać zabiegami dentystycznymi.</p>
 
+        @if(session('success'))
+            <div class="alert alert-success" id="success-alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger" id="error-alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('error-alert').remove();"></button>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-md-12">
                 <h2>Lista zabiegów</h2>
@@ -29,7 +42,7 @@
                                     <td>{{ $service->cost }}</td>
                                     <td>
                                         <a href="{{ route('service.edit', $service) }}" class="btn btn-primary btn-sm">Edytuj</a>
-                                        <form action="{{ route('dentist.dashboard', $service) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('service.delete', $service) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Usuń</button>

@@ -84,6 +84,24 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        //
+        if (auth()->user()->type === 'admin') {
+            return true; // Admins can delete any service
+        }
+        // For dentists, check if the dentist ID matches the one in the request
+        $user = auth()->user();
+        $dentist = Dentist::where('user_id', $user->id)->first();
+        if (!$dentist) {
+            // Dentist not found - this should never happen
+            return redirect()->back()
+                ->with(['error' => 'Nie udało się zweryfikować cię jako dentystę.']);
+        }
+        if ($dentist->id == $service->dentist_id) {
+            $service->delete();
+            return redirect()->route('dentist.services')
+                ->with('success', 'Usługa została usunięta pomyślnie.');
+        } else {
+            return redirect()->back()
+                ->with(['error', 'Nie masz uprawnień do usunięcia tej usługi.']);
+        }
     }
 }
