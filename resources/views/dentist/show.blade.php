@@ -13,6 +13,7 @@
                 <div>
                     <h4 class="card-title mb-1">{{ $dentist->name }} {{ $dentist->surname }}</h4>
                     <p class="card-text mb-0">Specjalizacja: {{ $dentist->specialization }}</p>
+                    <a href="{{ route('dentist.profile.edit') }}" class="btn btn-secondary mt-3">Edytuj profil</a>
                 </div>
                 <div class="text-end">
                     <span class="display-4 fw-bold">{{ $upcoming_procedures_count }}</span>
