@@ -25,16 +25,25 @@
         <label for="dentist_id" class="form-label">Dentysta:</label>
         <input type="text" class="form-control" value="{{ $dentist_name }}" disabled>
         <input type="hidden" name="dentist_id" id="dentist_id" value="{{ $service->dentist_id }}">
+        @error('dentist_id')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="mb-3">
         <label for="service_name" class="form-label">Nazwa zabiegu:</label>
-        <input type="text" name="service_name" id="service_name" class="form-control" value="{{ old('service_name', $service->service_name) }}" required>
+        <input type="text" name="service_name" id="service_name" class="form-control @error('service_name') is-invalid @enderror" value="{{ old('service_name', $service->service_name) }}" required>
+        @error('service_name')
+            <div class="invalid-feedback d-block">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="mb-3">
         <label for="cost" class="form-label">Koszt:</label>
-        <input type="number" name="cost" id="cost" class="form-control" value="{{ old('cost', $service->cost) }}" step="0.01" required>
+        <input type="number" name="cost" id="cost" class="form-control @error('cost') is-invalid @enderror" value="{{ old('cost', $service->cost) }}" step="0.01" required>
+        @error('cost')
+            <div class="invalid-feedback d-block">{{ $message }}</div>
+        @enderror
     </div>
 
     <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
