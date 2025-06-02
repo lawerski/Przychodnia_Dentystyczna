@@ -14,7 +14,7 @@ use App\Http\Controllers\PatientPanelController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
     Route::get('/', [AdminPanelController::class, 'index'])->name('dashboard');
-    Route::get('/admin/profile', [AdminPanelController::class, 'editProfile'])->name('admin.profile.edit');
+    Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
 });
@@ -22,7 +22,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // Panel pacjenta
 Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->group(function () {
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
-    Route::get('/patient/profile', [PatientPanelController::class, 'editProfile'])->name('patient.profile.edit');
+    Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/totp', [PatientPanelController::class, 'generateTotpSecret'])->name('totp');
 });
