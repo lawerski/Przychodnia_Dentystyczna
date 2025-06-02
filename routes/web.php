@@ -53,3 +53,5 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('service.edit');
 Route::put('/service/{service}/update', [ServiceController::class, 'update'])->name('service.update');
 Route::delete('/service/{service}/delete', [ServiceController::class, 'destroy'])->name('service.delete');
+Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
+Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');

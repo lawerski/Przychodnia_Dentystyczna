@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Dentist;
 use Illuminate\Http\Request;
@@ -23,15 +24,39 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        $isAdmin = auth()->user()->type === 'admin';
+
+        if ($isAdmin){
+            $dentists = Dentist::all();
+            return view('service.admin.create', [
+                'dentists' => $dentists,
+            ]);
+        } else {
+            $dentist = Dentist::where('user_id', auth()->id())->first();
+            $dentistName = $dentist->name ?? '';
+            $dentistSurname = $dentist->surname ?? '';
+            $dentistSpecialization = $dentist->specialization ?? '';
+            $dentistText = $dentistName . ' ' . $dentistSurname . ' - ' . $dentistSpecialization;
+            $dentistId = $dentist->id ?? null;
+            return view('service.dentist.create', [
+                'dentist_id' => $dentistId,
+                'dentist_name' => $dentistText,
+            ]);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateServiceRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+
+        // Create the service with the validated data
+        $service = Service::create($validatedData);
+
+        return redirect()->route('service.edit', $service)
+            ->with('success', 'Usługa została dodana pomyślnie.');
     }
 
     /**

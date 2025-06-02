@@ -58,7 +58,7 @@
 
         <div class="row mt-4">
             <div class="col-md-12">
-                <a href="{{ route('dentist.dashboard') }}" class="btn btn-success">Dodaj nowy zabieg</a>
+                <a href="{{ route('service.create') }}" class="btn btn-success">Dodaj nowy zabieg</a>
             </div>
         </div>
     @include('shared.footer')
