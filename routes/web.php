@@ -23,6 +23,7 @@ Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->gro
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
     Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/totp', [PatientPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
 // Panel dentysty
@@ -46,3 +47,5 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
+
+Route::post('/totp-verify', [LoginController::class, 'verifyTotp'])->name('totp.verify');
