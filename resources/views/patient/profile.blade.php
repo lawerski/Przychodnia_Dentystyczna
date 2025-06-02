@@ -30,5 +30,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
     </form>
+    <a href="{{ route('patient.totp') }}" class="btn btn-info mt-3">Aktywuj TOTP (Google Authenticator)</a>
 </div>
 @endsection

@@ -16,6 +16,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminPanelController::class, 'index'])->name('dashboard');
     Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
 // Panel pacjenta
@@ -23,6 +24,7 @@ Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->gro
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
     Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/totp', [PatientPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
 // Panel dentysty
@@ -34,6 +36,7 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist', 'show')->name('dentist.dashboard');
         Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
+        Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
     });
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
@@ -46,3 +49,5 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
+
+Route::post('/totp-verify', [LoginController::class, 'verifyTotp'])->name('totp.verify');
