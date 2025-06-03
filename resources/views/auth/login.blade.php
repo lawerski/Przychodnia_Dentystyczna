@@ -22,7 +22,11 @@
                 </ul>
             </div>
         @endif
+        <div class="mt-3">
+            <a href="{{ route('password.request') }}">Nie pamiętam hasła</a>
+        </div>
         <button type="submit" class="btn btn-primary">Zaloguj</button>
     </form>
+
 </div>
 @endsection
