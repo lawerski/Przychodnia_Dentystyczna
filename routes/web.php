@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\PatientPanelController;
+use App\Http\Controllers\Admin\DentistController;
+
 
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -17,6 +19,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
+     Route::resource('dentists', \App\Http\Controllers\Admin\DentistController::class);
 });
 
 // Panel pacjenta
