@@ -33,6 +33,7 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist/history', 'history')->name('dentist.history');
         Route::get('/dentist/upcoming', 'upcoming')->name('dentist.upcoming');
         Route::get('/dentist/reviews', 'reviews')->name('dentist.reviews');
+        Route::get('/dentist/calendar', 'calendar')->name('dentist.calendar');
         Route::get('/dentist', 'show')->name('dentist.dashboard');
         Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
