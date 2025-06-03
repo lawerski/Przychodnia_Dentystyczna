@@ -17,6 +17,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminPanelController::class, 'index'])->name('dashboard');
     Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
 // Panel pacjenta
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->gro
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
     Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/totp', [PatientPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
 // Panel dentysty
@@ -33,9 +35,11 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist/upcoming', 'upcoming')->name('dentist.upcoming');
         Route::get('/dentist/reviews', 'reviews')->name('dentist.reviews');
         Route::get('/dentist/services', 'services')->name('dentist.services');
+        Route::get('/dentist/calendar', 'calendar')->name('dentist.calendar');
         Route::get('/dentist', 'show')->name('dentist.dashboard');
         Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
+        Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
     });
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
@@ -55,3 +59,10 @@ Route::put('/service/{service}/update', [ServiceController::class, 'update'])->n
 Route::delete('/service/{service}/delete', [ServiceController::class, 'destroy'])->name('service.delete');
 Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
 Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
+
+// Totp
+Route::post('/totp-verify', [LoginController::class, 'verifyTotp'])->name('totp.verify');
+Route::get('/password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/password/email', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');

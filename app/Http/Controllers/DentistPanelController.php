@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use OTPHP\TOTP;
 class DentistPanelController extends Controller
 {
     // In case the names change in the future only this needs to be updated
@@ -113,7 +114,6 @@ class DentistPanelController extends Controller
         ]);
     }
 
-
     public function editProfile()
     {
         $user = Auth::user();
@@ -139,9 +139,9 @@ class DentistPanelController extends Controller
         return back()->with('success', 'Dane zostały zaktualizowane.');
     }
     /**
-     * Get anonimized reviews for dentist.
+     * Get data for calendar view.
      */
-    public function reviews()
+    public function calendar()
     {
         // TODO: Get the dentist ID and authenticate the user
         $dentist = Dentist::first();
@@ -149,8 +149,33 @@ class DentistPanelController extends Controller
             // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
-        $reviews = Review::where('dentist_id', $dentist->id);
+        $offeredServicesIds = $dentist->services->pluck('id');
+        $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
+            ->whereIn('status', [$this->pending, $this->confirmed])
+            ->with(['user', 'service'])
+            ->orderBy('date_time', 'asc')
+            ->get()
+            ->map(function ($reservation) {
+            return [
+                'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
+            ];
+            });
 
+        return view('dentist.calendar', [
+            'procedures' => $procedures,
+        ]);
+    }
+    /**
+     * Get anonimized reviews for dentist.
+     */
+    public function reviews()
+    {
+        $dentist = Dentist::first();
+        if (!$dentist) {
+            // Handle the case when no dentist is found
+            return redirect()->back()->withErrors(['Dentist not found.']);
+        }
+        $reviews = Review::where('dentist_id', $dentist->id);
         return view('dentist.review', [
             'reviews' => $reviews->get()->map(function ($review) {
                 return [
@@ -176,6 +201,34 @@ class DentistPanelController extends Controller
 
         return view('dentist.services', [
             'services' => $services,
+        ]);
+    }
+
+    public function generateTotpSecret()
+    {
+        $user = Auth::user();
+
+        if (!$user->totp_secret) {
+            $totp = TOTP::create();
+            $user->totp_secret = $totp->getSecret();
+            $user->save();
+        }
+        $totp = TOTP::create($user->totp_secret);
+
+        $label = $user->email ?: $user->username;
+        if (!$label) {
+            $label = 'user-' . $user->id;
+        }
+        $totp->setLabel($label);
+        $totp->setIssuer(config('app.name', 'Przychodnia Dentystyczna'));
+
+        $provisioningUri = $totp->getProvisioningUri();
+        $qrTemplate = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=%s';
+        $qrCodeUri = sprintf($qrTemplate, urlencode($provisioningUri));
+
+        return view('auth.totp', [
+            'qrCodeUri' => $qrCodeUri,
+            'secret' => $user->totp_secret,
         ]);
     }
 }

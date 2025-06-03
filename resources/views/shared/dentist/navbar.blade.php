@@ -16,6 +16,9 @@
                     <a class="nav-link" href="{{ route('dentist.services') }}">Moje ofery</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dentist.calendar') }}">Kalendarz zabiegów</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('dentist.reviews') }}">Oceny</a>
                 </li>
             </ul>
