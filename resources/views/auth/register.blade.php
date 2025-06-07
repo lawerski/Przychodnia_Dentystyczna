@@ -25,13 +25,6 @@
             <label class="form-label">Potwierdź hasło</label>
             <input type="password" name="password_confirmation" class="form-control" required>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Typ</label>
-            <select name="type" class="form-select">
-                <option value="patient">Pacjent</option>
-                <option value="dentist">Dentysta</option>
-            </select>
-        </div>
         @if($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
