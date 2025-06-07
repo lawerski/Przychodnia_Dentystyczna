@@ -16,13 +16,19 @@ class DentistPanelController extends Controller
     private $cancelled = 'anulowana';
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
-    public function show()
+
+    private function getDentist()
     {
-        $user =  Auth::user();
-        $dentist = $user->dentist;
-        if (!$dentist) {
+        $user = Auth::user();
+        if (!$user || !$user->dentist) {
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
+        return $user->dentist;
+    }
+
+    public function show()
+    {
+        $dentist = $this->getDentist();
         $offeredServicesIds = $dentist->services->pluck('id');
         $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->completed, $this->cancelled])
@@ -55,11 +61,7 @@ class DentistPanelController extends Controller
      */
     public function history()
     {
-        $user =  Auth::user();
-        $dentist = $user->dentist;
-        if (!$dentist) {
-            return redirect()->back()->withErrors(['Dentist not found.']);
-        }
+        $dentist = $this->getDentist();
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->cancelled, $this->completed])
@@ -85,11 +87,7 @@ class DentistPanelController extends Controller
      */
     public function upcoming()
     {
-        $user =  Auth::user();
-        $dentist = $user->dentist;
-        if (!$dentist) {
-            return redirect()->back()->withErrors(['Dentist not found.']);
-        }
+        $dentist = $this->getDentist();
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
@@ -140,11 +138,7 @@ class DentistPanelController extends Controller
      */
     public function calendar()
     {
-        $user =  Auth::user();
-        $dentist = $user->dentist;
-        if (!$dentist) {
-            return redirect()->back()->withErrors(['Dentist not found.']);
-        }
+        $dentist = $this->getDentist();
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
@@ -166,11 +160,7 @@ class DentistPanelController extends Controller
      */
     public function reviews()
     {
-        $user =  Auth::user();
-        $dentist = $user->dentist;
-        if (!$dentist) {
-            return redirect()->back()->withErrors(['Dentist not found.']);
-        }
+        $dentist = $this->getDentist();
         $reviews = Review::where('dentist_id', $dentist->id);
         return view('dentist.review', [
             'reviews' => $reviews->get()->map(function ($review) {
@@ -187,11 +177,7 @@ class DentistPanelController extends Controller
      */
     public function services()
     {
-        $user =  Auth::user();
-        $dentist = $user->dentist;
-        if (!$dentist) {
-            return redirect()->back()->withErrors(['Dentist not found.']);
-        }
+        $dentist = $this->getDentist();
         $services = $dentist->services;
 
         return view('dentist.services', [
