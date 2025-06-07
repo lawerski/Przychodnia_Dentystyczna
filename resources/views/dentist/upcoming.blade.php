@@ -1,16 +1,10 @@
-@include('shared.html')
+@extends('layouts.dentist', ['pageTitle' => 'Nadchodzące zabiegi'])
 
-@include('shared.head', ['pageTitle' => 'Nadchodzące zabiegi'])
-
-<body>
-    @include('shared.dentist.navbar')
-
+@section('content')
     <div class="container mt-5 mb-5">
         <h1 class="mt-4">Nadchodzące zabiegi</h1>
         <p>W tej sekcji możesz przeglądać nadchodzące zabiegi.</p>
 
         @include('shared.dentist.procedures', ['procedures' => $procedures])
     </div>
-    @include('shared.footer')
-</body>
-</html>
+@endsection

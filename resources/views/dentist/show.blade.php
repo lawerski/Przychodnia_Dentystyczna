@@ -1,10 +1,6 @@
-@include('shared.html')
+@extends('layouts.dentist', ['pageTitle' => 'Panel Dentysty'])
 
-@include('shared.head', ['pageTitle' => 'Panel Dentysty'])
-
-<body>
-    @include('shared.dentist.navbar')
-
+@section('content')
     <div class="container mt-5 mb-5">
         <h1 class="mt-4">Panel Dentysty</h1>
         <p>Witaj w panelu dentysty! Tutaj możesz zarządzać swoimi zabiegami, przeglądać historię i nadchodzące zabiegi.</p>
@@ -58,6 +54,4 @@
             @endforeach
         </div>
     </div>
-    @include('shared.footer')
-</body>
-</html>
+@endsection

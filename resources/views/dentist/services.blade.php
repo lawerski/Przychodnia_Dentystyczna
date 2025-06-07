@@ -1,9 +1,6 @@
-@include('shared.html')
+@extends('layouts.dentist', ['pageTitle' => 'Zabiegi dentystyczne'])
 
-@include('shared.head', ['pageTitle' => 'Zabiegi dentystyczne'])
-
-<body>
-    @include('shared.dentist.navbar')
+@section('content')
     <div class="container mt-5 mb-5">
         <h1 class="mt-4">Zabiegi dentystyczne</h1>
         <p>W tej sekcji możesz przeglądać i zarządzać zabiegami dentystycznymi.</p>
@@ -63,6 +60,5 @@
                 <a href="{{ route('service.create') }}" class="btn btn-success">Dodaj nowy zabieg</a>
             </div>
         </div>
-    @include('shared.footer')
-</body>
-</html>
+    </div>
+@endsection

@@ -24,7 +24,7 @@
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @include('shared.navbar_back')
-                @include('shared.admin.navbar_dropdown')
+                @include('shared.navbar_dropdown')
                 @include('shared.navbar_theme')
             </ul>
         </div>

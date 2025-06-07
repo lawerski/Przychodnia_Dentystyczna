@@ -1,10 +1,6 @@
-@include('shared.html')
+@extends('layouts.dentist', ['pageTitle' => 'Opinie'])
 
-@include('shared.head', ['pageTitle' => 'Oceny i opinie'])
-
-<body>
-    @include('shared.dentist.navbar')
-
+@section('content')
     <div class="container mt-5 mb-5">
         <h1 class="mt-4">Oceny i opinie</h1>
         <p>W tej sekcji można przeglądać opinie użytkowników.</p>
@@ -29,6 +25,4 @@
             </div>
         </div>
     </div>
-    @include('shared.footer')
-</body>
-</html>
+@endsection

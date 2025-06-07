@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth', ['pageTitle' => 'Resetuj hasło'])
 
 @section('content')
 <div class="container mt-4" style="max-width:400px;">
