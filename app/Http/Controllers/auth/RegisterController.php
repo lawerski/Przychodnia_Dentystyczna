@@ -22,9 +22,8 @@ class RegisterController extends Controller
             'email' => 'required|email|max:255|unique:users',
             'phone' => 'nullable|string|max:255',
             'password' => 'required|string|min:4|confirmed',
-            'type' => 'required|in:patient,dentist',
         ]);
-
+        $validated['type']='patient';
         $validated['password'] = bcrypt($validated['password']);
         $user = User::create($validated);
 
