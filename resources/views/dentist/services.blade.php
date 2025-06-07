@@ -25,7 +25,9 @@
             <div class="col-md-12">
                 <h2>Lista zabiegów</h2>
                 @if($services->isEmpty())
-                    <p>Brak zabiegów do wyświetlenia.</p>
+                    <div class="alert alert-info" role="alert">
+                        Brak zabiegów do wyświetlenia.
+                    </div>
                 @else
                     <table class="table table-striped">
                         <thead>

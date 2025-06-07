@@ -18,10 +18,9 @@ class DentistPanelController extends Controller
     private $confirmed = 'potwierdzona';
     public function show()
     {
-        // TODO: Get the dentist ID and authenticate the user
-        $dentist = Dentist::first();
+        $user =  Auth::user();
+        $dentist = $user->dentist;
         if (!$dentist) {
-            // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
         $offeredServicesIds = $dentist->services->pluck('id');
@@ -32,7 +31,7 @@ class DentistPanelController extends Controller
             ->whereIn('status', [$this->pending, $this->confirmed])
             ->count();
 
-        $reviews = Review::where('dentist_id', $dentist->id)
+        $reviews = $dentist->reviews()
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->get()
@@ -56,10 +55,9 @@ class DentistPanelController extends Controller
      */
     public function history()
     {
-        // TODO: Get the dentist ID and authenticate the user
-        $dentist = Dentist::first();
+        $user =  Auth::user();
+        $dentist = $user->dentist;
         if (!$dentist) {
-            // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
         $offeredServicesIds = $dentist->services->pluck('id');
@@ -87,10 +85,9 @@ class DentistPanelController extends Controller
      */
     public function upcoming()
     {
-        // TODO: Get the dentist ID and authenticate the user
-        $dentist = Dentist::first();
+        $user =  Auth::user();
+        $dentist = $user->dentist;
         if (!$dentist) {
-            // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
         $offeredServicesIds = $dentist->services->pluck('id');
@@ -143,10 +140,9 @@ class DentistPanelController extends Controller
      */
     public function calendar()
     {
-        // TODO: Get the dentist ID and authenticate the user
-        $dentist = Dentist::first();
+        $user =  Auth::user();
+        $dentist = $user->dentist;
         if (!$dentist) {
-            // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
         $offeredServicesIds = $dentist->services->pluck('id');
@@ -170,9 +166,9 @@ class DentistPanelController extends Controller
      */
     public function reviews()
     {
-        $dentist = Dentist::first();
+        $user =  Auth::user();
+        $dentist = $user->dentist;
         if (!$dentist) {
-            // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
         $reviews = Review::where('dentist_id', $dentist->id);
@@ -191,10 +187,9 @@ class DentistPanelController extends Controller
      */
     public function services()
     {
-        // TODO: Get the dentist ID and authenticate the user
-        $dentist = Dentist::first();
+        $user =  Auth::user();
+        $dentist = $user->dentist;
         if (!$dentist) {
-            // Handle the case when no dentist is found
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
         $services = $dentist->services;

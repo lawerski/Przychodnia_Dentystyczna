@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dentist;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,17 @@ class RegisterController extends Controller
 
         $validated['password'] = bcrypt($validated['password']);
         $user = User::create($validated);
+
+        // FIXME: If the user is a dentist, create a Dentist record
+        if ($request->input('type') === 'dentist') {
+            Dentist::create([
+            'user_id' => $user->id,
+            'name' => $request->input('name', 'temp'),
+            'surname' => $request->input('surname', 'temp'),
+            'specialization' => $request->input('specialization', 'temp'),
+            'license_number' => $request->input('license_number', 'temp'),
+            ]);
+        }
 
         Auth::login($user);
 
