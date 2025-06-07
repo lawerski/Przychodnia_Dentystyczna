@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DentistPanelController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\PublicDentistController; // Add this line
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
     });
 });
+// Publiczne trasy
+Route::get('/dentists', [PublicDentistController::class, 'index'])->name('dentists.index');
+Route::get('/dentists/{dentist}', [PublicDentistController::class, 'show'])->name('dentists.show');
 
 // Autoryzacja
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');

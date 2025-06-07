@@ -17,13 +17,14 @@ class Dentist extends Model
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'user_id',
-        'name',
-        'surname',
-        'specialization',
-        'license_number',
-    ];
+protected $fillable = [
+    'user_id',
+    'name',
+    'surname',
+    'specialization',
+    'license_number',
+    'image_path'
+];
 
     public function user(): BelongsTo
     {

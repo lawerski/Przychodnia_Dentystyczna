@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Dentist;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class DentistController extends Controller
 {
@@ -31,26 +33,43 @@ class DentistController extends Controller
             'surname' => 'required|string|max:255',
             'specialization' => 'required|string|max:255',
             'license_number' => 'required|string|max:255|unique:dentists',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $user = User::create([
-            'username' => $validated['username'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-            'phone' => $validated['phone'],
-            'type' => 'dentist'
-        ]);
+        DB::beginTransaction();
 
-        Dentist::create([
-            'user_id' => $user->id,
-            'name' => $validated['name'],
-            'surname' => $validated['surname'],
-            'specialization' => $validated['specialization'],
-            'license_number' => $validated['license_number'],
-        ]);
+        try {
+            $user = User::create([
+                'username' => $validated['username'],
+                'email' => $validated['email'],
+                'password' => bcrypt($validated['password']),
+                'phone' => $validated['phone'],
+                'type' => 'dentist'
+            ]);
 
-        return redirect()->route('admin.dentists.index')
-            ->with('success', 'Dentysta dodany pomyślnie');
+            $dentistData = [
+                'user_id' => $user->id,
+                'name' => $validated['name'],
+                'surname' => $validated['surname'],
+                'specialization' => $validated['specialization'],
+                'license_number' => $validated['license_number']
+            ];
+
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('dentists', 'public');
+                $dentistData['image_path'] = $path;
+            }
+
+            Dentist::create($dentistData);
+
+            DB::commit();
+            return redirect()->route('admin.dentists.index')
+                ->with('success', 'Dentysta został dodany pomyślnie');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->withErrors(['error' => 'Wystąpił błąd podczas dodawania dentysty']);
+        }
     }
 
     public function edit(Dentist $dentist)
@@ -65,7 +84,16 @@ class DentistController extends Controller
             'surname' => 'required|string|max:255',
             'specialization' => 'required|string|max:255',
             'license_number' => 'required|string|max:255|unique:dentists,license_number,' . $dentist->id,
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($dentist->image_path) {
+                Storage::disk('public')->delete($dentist->image_path);
+            }
+            $validated['image_path'] = $request->file('image')->store('dentists', 'public');
+        }
 
         $dentist->update($validated);
 
@@ -75,6 +103,9 @@ class DentistController extends Controller
 
     public function destroy(Dentist $dentist)
     {
+        if ($dentist->image_path) {
+            Storage::disk('public')->delete($dentist->image_path);
+        }
         $dentist->delete();
         return redirect()->route('admin.dentists.index')
             ->with('success', 'Dentysta usunięty');
