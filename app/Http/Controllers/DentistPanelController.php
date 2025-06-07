@@ -21,7 +21,7 @@ class DentistPanelController extends Controller
     {
         $user = Auth::user();
         if (!$user || !$user->dentist) {
-            return redirect()->back()->withErrors(['Dentist not found.']);
+            return null;
         }
         return $user->dentist;
     }
@@ -29,6 +29,8 @@ class DentistPanelController extends Controller
     public function show()
     {
         $dentist = $this->getDentist();
+        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
+
         $offeredServicesIds = $dentist->services->pluck('id');
         $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->completed, $this->cancelled])
@@ -88,6 +90,8 @@ class DentistPanelController extends Controller
     public function upcoming()
     {
         $dentist = $this->getDentist();
+        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
+
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
@@ -139,6 +143,8 @@ class DentistPanelController extends Controller
     public function calendar()
     {
         $dentist = $this->getDentist();
+        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
+
         $offeredServicesIds = $dentist->services->pluck('id');
         $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
             ->whereIn('status', [$this->pending, $this->confirmed])
@@ -161,6 +167,8 @@ class DentistPanelController extends Controller
     public function reviews()
     {
         $dentist = $this->getDentist();
+        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
+
         $reviews = Review::where('dentist_id', $dentist->id);
         return view('dentist.review', [
             'reviews' => $reviews->get()->map(function ($review) {
@@ -178,6 +186,8 @@ class DentistPanelController extends Controller
     public function services()
     {
         $dentist = $this->getDentist();
+        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
+
         $services = $dentist->services;
 
         return view('dentist.services', [
