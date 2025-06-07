@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -150,5 +151,6 @@
             <a href="{{ route('dentist.dashboard') }}" class="btn btn-secondary">Anuluj</a>
         </div>
     </form>
+    <a href="{{ route('dentist.totp') }}" class="btn btn-info mt-3">Aktywuj TOTP (Google Authenticator)</a>
 </div>
 @endsection
