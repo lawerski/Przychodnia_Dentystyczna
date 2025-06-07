@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin', ['pageTitle' => 'Moje dane'])
 
 @section('content')
 <div class="container mt-4" style="max-width:500px;">

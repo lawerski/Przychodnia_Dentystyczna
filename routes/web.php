@@ -11,6 +11,11 @@ use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\PatientPanelController;
 use App\Http\Controllers\ServiceController;
 
+// Main page
+Route::get('/', function () {
+    return view('main');
+})->name('main');
+
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
