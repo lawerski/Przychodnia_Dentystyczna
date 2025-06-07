@@ -67,6 +67,8 @@ Route::middleware(['auth', 'role:admin,dentist'])->group( function () {
     Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
 });
 
+Route::get('/services', [ServiceController::class, 'index'])->name('service.index');
+
 // Totp
 Route::post('/totp-verify', [LoginController::class, 'verifyTotp'])->name('totp.verify');
 Route::get('/password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');

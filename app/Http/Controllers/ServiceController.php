@@ -19,7 +19,21 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
+        $services = Service::when(request()->filled('dentist_id'), function ($q) {
+            $q->where('dentist_id', request()->get('dentist_id'));
+            })
+            ->when(request()->filled('service_name'), function ($q) {
+            $q->where('service_name', 'like', '%' . request()->get('service_name') . '%');
+            })
+            ->when(request()->filled('cost_max'), function ($q) {
+            $q->where('cost', '<=', request()->get('cost_max'));
+            })
+            ->paginate(15);
+        return view('service.index', [
+            'services' => $services,
+            'dentists' => Dentist::all(),
+            'max_cost' => Service::max('cost'),
+        ]);
     }
 
     /**
@@ -27,15 +41,15 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $isAdmin = auth()->user()->type === 'admin';
+        $user = auth()->user();
 
-        if ($isAdmin){
+        if ($user->hasRole('admin')) {
             $dentists = Dentist::all();
             return view('service.admin.create', [
-                'dentists' => $dentists,
+            'dentists' => $dentists,
             ]);
         } else {
-            $dentist = Dentist::where('user_id', auth()->id())->first();
+            $dentist = $user->dentist;
             $dentistName = $dentist->name ?? '';
             $dentistSurname = $dentist->surname ?? '';
             $dentistSpecialization = $dentist->specialization ?? '';
@@ -77,9 +91,9 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        $isAdmin = auth()->user()->type === 'admin';
+        $user = auth()->user();
 
-        if ($isAdmin){
+        if ($user->hasRole('admin')) {
             $dentists = Dentist::all();
             return view('service.admin.edit', [
                 'service' => $service,
