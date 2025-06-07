@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -19,8 +18,7 @@
                 <select name="specialization" class="form-select">
                     <option value="">Wszystkie specjalizacje</option>
                     @foreach($specializations as $spec)
-                        <option value="{{ $spec }}" 
-                                {{ request('specialization') == $spec ? 'selected' : '' }}>
+                        <option value="{{ $spec }}" {{ request('specialization') == $spec ? 'selected' : '' }}>
                             {{ $spec }}
                         </option>
                     @endforeach

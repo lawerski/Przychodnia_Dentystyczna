@@ -41,6 +41,9 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
         Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
+          Route::controller(ReservationController::class)->group(function () {
+        Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
+    });
     });
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');

@@ -116,9 +116,7 @@ class DentistPanelController extends Controller
                     ];
                 });
 
-            return view('dentist.upcoming', [
-                'procedures' => $procedures,
-            ]);
+            return view('dentist.upcoming', ['procedures' => $procedures]);
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['error' => 'Nie masz uprawnień do tej strony.']);
         }

@@ -11,8 +11,8 @@ class PublicDentistController extends Controller
     {
         $query = Dentist::query();
 
-        // Filtering
-        if ($request->has('search')) {
+        // Search functionality
+        if ($request->has('search') && !empty($request->get('search'))) {
             $search = $request->get('search');
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -21,8 +21,9 @@ class PublicDentistController extends Controller
             });
         }
 
-        if ($request->has('specialization')) {
-            $query->where('specialization', $request->get('specialization'));
+        // Only apply specialization filter if a specific one is selected
+        if ($request->filled('specialization')) {
+            $query->where('specialization', $request->specialization);
         }
 
         // Sorting
@@ -30,9 +31,11 @@ class PublicDentistController extends Controller
         $sortDirection = $request->get('direction', 'asc');
         $query->orderBy($sortField, $sortDirection);
 
-        // Get unique specializations for filter
+        // Get unique specializations for filter dropdown
         $specializations = Dentist::select('specialization')
             ->distinct()
+            ->whereNotNull('specialization')
+            ->orderBy('specialization')
             ->pluck('specialization');
 
         // Pagination
