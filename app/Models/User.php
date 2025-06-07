@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function dentist(): HasOne
     {
-        return $this->hasOne(Dentist::class, 'dentist_id', 'id');
+        return $this->hasOne(Dentist::class);
     }
 
     public function reservations(): HasMany

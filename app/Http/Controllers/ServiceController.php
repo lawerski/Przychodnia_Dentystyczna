@@ -7,10 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Dentist;
+use Illuminate\Auth\Access\Gate;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -50,6 +53,8 @@ class ServiceController extends Controller
      */
     public function store(CreateServiceRequest $request)
     {
+        $this->authorize('create', [Service::class, $request]);
+
         $validatedData = $request->validated();
 
         // Create the service with the validated data
@@ -98,6 +103,7 @@ class ServiceController extends Controller
      */
     public function update(UpdateServiceRequest $request, Service $service)
     {
+        $this->authorize('update', $service);
         $service->update($request->validated());
 
         return redirect()->route('service.edit', $service)
@@ -109,24 +115,9 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        if (auth()->user()->type === 'admin') {
-            return true; // Admins can delete any service
-        }
-        // For dentists, check if the dentist ID matches the one in the request
-        $user = auth()->user();
-        $dentist = Dentist::where('user_id', $user->id)->first();
-        if (!$dentist) {
-            // Dentist not found - this should never happen
-            return redirect()->back()
-                ->with(['error' => 'Nie udało się zweryfikować cię jako dentystę.']);
-        }
-        if ($dentist->id == $service->dentist_id) {
-            $service->delete();
-            return redirect()->route('dentist.services')
-                ->with('success', 'Usługa została usunięta pomyślnie.');
-        } else {
-            return redirect()->back()
-                ->with(['error', 'Nie masz uprawnień do usunięcia tej usługi.']);
-        }
+        $this->authorize('delete', $service);
+        $service->delete();
+        return redirect()->route('dentist.services')
+            ->with('success', 'Usługa została usunięta pomyślnie.');
     }
 }
