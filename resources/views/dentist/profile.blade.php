@@ -150,5 +150,11 @@
             <a href="{{ route('dentist.dashboard') }}" class="btn btn-secondary">Anuluj</a>
         </div>
     </form>
+    
+    <div class="mt-3">
+        <a href="{{ route('dentist.totp') }}" class="btn btn-info">
+            <i class="bi bi-shield-lock"></i> Aktywuj TOTP (Google Authenticator)
+        </a>
+    </div>
 </div>
 @endsection
