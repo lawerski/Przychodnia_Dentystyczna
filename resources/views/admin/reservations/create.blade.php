@@ -40,7 +40,7 @@
                 <option value="">Wybierz usługę</option>
                 @foreach($services as $service)
                     <option value="{{ $service->id }}" @if(old('service_id') == $service->id) selected @endif>
-                        {{ $service->name }}
+                        {{ $service->service_name }}
                     </option>
                 @endforeach
             </select>

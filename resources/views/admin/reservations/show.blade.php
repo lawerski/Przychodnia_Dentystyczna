@@ -15,7 +15,7 @@
         </tr>
         <tr>
             <th>Usługa</th>
-            <td>{{ $reservation->service->name ?? '' }}</td>
+            <td>{{ $reservation->service->service_name ?? '' }}</td>
         </tr>
         <tr>
             <th>Data</th>

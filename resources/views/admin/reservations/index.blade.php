@@ -42,8 +42,8 @@
                 <tr>
                     <td>{{ $reservation->id }}</td>
                     <td>{{ $reservation->user->username ?? '' }}</td>
-                    <td>{{ $reservation->service->name ?? '' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i:s') }}</td>
+                    <td>{{ $reservation->service->service_name ?? '' }}</td>
+                    <td>{{ $reservation->date_time }}</td>
                     <td>
                         <span class="badge
                             @if($reservation->status === 'potwierdzona') bg-success
