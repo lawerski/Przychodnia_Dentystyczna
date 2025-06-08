@@ -3,6 +3,18 @@
 @section('content')
 
 <div class="container mt-4">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
+        </div>
+    @endif
     <h2>Zabiegi</h2>
     <form method="GET" action="{{ route('service.index') }}" class="row g-3 mb-4">
         <div class="col-md-3 d-flex align-items-end">
@@ -47,15 +59,29 @@
             @foreach($services as $service)
             <tr>
                 <td>{{ $service->service_name }}</td>
-                <td>{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
+                <td>{{ $service->dentist->name }} {{ $service->dentist->surname }}</td>
                 <td>{{ $service->cost }} zł</td>
                 <td>
-                @guest
-                    <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
-                @else
-                    {{-- TODO: Add reservations --}}
-                    <a href="#" class="btn btn-success btn-sm">Rezerwacja</a>
-                @endguest
+                    @guest
+                        <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
+                    @else
+                        @if(auth()->user()->type === 'patient')
+                            <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#reservationForm{{ $service->id }}">
+                                Rezerwacja
+                            </button>
+                            <div class="collapse mt-2" id="reservationForm{{ $service->id }}">
+                                <form action="{{ route('reservation.store') }}" method="POST" class="border rounded p-3 bg-light">
+                                    @csrf
+                                    <input type="hidden" name="service_id" value="{{ $service->id }}">
+                                    <div class="mb-2">
+                                        <label for="date_time_{{ $service->id }}" class="form-label">Wybierz termin</label>
+                                        <input type="datetime-local" name="date_time" id="date_time_{{ $service->id }}" class="form-control" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm">Zarezerwuj wizytę</button>
+                                </form>
+                            </div>
+                        @endif
+                    @endguest
                 </td>
             </tr>
             @endforeach
@@ -64,4 +90,5 @@
     @endif
     {{ $services->links('pagination::bootstrap-5') }}
 </div>
+
 @endsection

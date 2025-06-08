@@ -18,8 +18,12 @@
             <td>{{ $reservation->service->service_name ?? '' }}</td>
         </tr>
         <tr>
-            <th>Data i godzina</th>
-            <td>{{ $reservation->date_time }}</td>
+            <th>Data</th>
+            <td>{{ \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <th>Godzina</th>
+            <td>{{ \Carbon\Carbon::parse($reservation->date_time)->format('H:i') }}</td>
         </tr>
         <tr>
             <th>Status</th>
@@ -37,7 +41,7 @@
         </tr>
         <tr>
             <th>Data zgłoszenia</th>
-            <td>{{ $reservation->submitted_at }}</td>
+            <td>{{ \Carbon\Carbon::parse($reservation->submitted_at)->format('Y-m-d H:i:s') }}</td>
         </tr>
     </table>
     <a href="{{ route('admin.reservations.edit', $reservation) }}" class="btn btn-warning">Edytuj</a>
