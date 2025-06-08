@@ -16,6 +16,9 @@ Route::get('/', function () {
     return view('main');
 })->name('main');
 
+// Dentyści
+Route::get('/dentists/{dentist}', [\App\Http\Controllers\DentistController::class, 'show'])->name('dentists.show');
+
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);

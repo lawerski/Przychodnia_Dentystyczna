@@ -9,6 +9,9 @@
 
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                @if (!request()->routeIs('main'))
+                @include('shared.navbar_back')
+                @endif
                 @include('shared.navbar_dropdown')
                 @include('shared.navbar_theme')
             </ul>
