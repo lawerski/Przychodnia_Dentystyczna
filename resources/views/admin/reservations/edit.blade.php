@@ -31,7 +31,7 @@
             <select name="service_id" id="service_id" class="form-select" required>
                 @foreach($services as $service)
                     <option value="{{ $service->id }}" @if($reservation->service_id == $service->id) selected @endif>
-                        {{ $service->name }}
+                        {{ $service->service_name }}
                     </option>
                 @endforeach
             </select>
