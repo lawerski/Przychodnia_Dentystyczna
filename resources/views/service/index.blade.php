@@ -31,9 +31,9 @@
         <div class="col-md-4 d-flex align-items-center">
             <label for="cost_max" class="form-label me-2 mb-0">Cena max:</label>
             <input type="range" class="form-range flex-grow-1 me-2" min="0" max="{{ $max_cost + 50 }}" step="10" id="cost_max" name="cost_max" value="{{ request('cost_max', $max_cost + 10 ) }}" oninput="document.getElementById('maxValue').innerText = this.value">
-            <span id="maxValue" style="min-width: 40px; text-align: right;">{{ round(request('cost_max', $max_cost)) }}</span> zł
+            <span id="maxValue" style="min-width: 60px; text-align: right; display: inline-block; margin-right: 4px;">{{ round(request('cost_max', $max_cost)) }}</span> zł
         </div>
-        <div class="col-md-2 d-flex align-items-center">
+        <div class="col-md-2 d-flex align-items-center justify-content-end">
             <button type="submit" class="btn btn-primary ms-2">Filtruj</button>
             <a href="{{ route('service.index') }}" class="btn btn-secondary ms-2">Wyczyść</a>
         </div>

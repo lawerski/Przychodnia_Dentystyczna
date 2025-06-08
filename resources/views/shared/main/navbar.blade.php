@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('service.index') }}">Usługi</a>
+                    <a class="nav-link" href="{{ route('service.index') }}">Zabiegi</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('dentists.index') }}">Dentyści</a>
