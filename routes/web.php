@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::get('/dentists', [PublicDentistController::class, 'index'])->name('dentists.index');
 Route::get('/services', [ServiceController::class, 'index'])->name('service.index');
 Route::get('/dentists/{dentist}', [\App\Http\Controllers\DentistController::class, 'show'])->name('dentists.show');
+Route::get('/services/service/{service}', [ServiceController::class, 'show'])->name('service.show');
 
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

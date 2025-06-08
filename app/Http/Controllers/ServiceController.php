@@ -83,7 +83,14 @@ class ServiceController extends Controller
      */
     public function show(Service $service)
     {
-        //
+        $popularity = $service->reservations()
+            ->where('date_time', '>=', now()->subWeek())
+            ->where('status', 'wykonana')
+            ->count();
+        return view('service.show', [
+            'popularity' => $popularity,
+            'service' => $service,
+        ]);
     }
 
     /**

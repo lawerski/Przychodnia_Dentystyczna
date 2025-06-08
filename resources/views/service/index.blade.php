@@ -1,5 +1,15 @@
 @extends('layouts.main', ['pageTitle' => 'Zabiegi'])
 
+<style>
+    .hover-unmuted {
+        color: #6c757d;
+        transition: color 0.2s;
+    }
+    a:hover .hover-unmuted {
+        color: inherit;
+    }
+</style>
+
 @section('content')
 
 <div class="container mt-4">
@@ -46,17 +56,21 @@
         <tbody>
             @foreach($services as $service)
             <tr>
-                <td>{{ $service->service_name }}</td>
-                <td>{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
-                <td>{{ $service->cost }} zł</td>
-                <td>
-                @guest
-                    <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
-                @else
-                    {{-- TODO: Add reservations --}}
-                    <a href="#" class="btn btn-success btn-sm">Rezerwacja</a>
-                @endguest
-                </td>
+            <td>
+            <a href="{{ route('service.show', $service->id) }}" class="" style="cursor: pointer; text-decoration: none; color: inherit;">
+            <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
+            </a>
+            </td>
+            <td>{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
+            <td>{{ $service->cost }} zł</td>
+            <td>
+            @guest
+            <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
+            @else
+            {{-- TODO: Add reservations --}}
+            <a href="#" class="btn btn-success btn-sm">Rezerwacja</a>
+            @endguest
+            </td>
             </tr>
             @endforeach
         </tbody>
