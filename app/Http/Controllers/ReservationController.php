@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -171,5 +172,32 @@ class ReservationController extends Controller
         $reservation->save();
 
         return back()->with('accepted', 'Rezerwacja zaakceptowana.');
+    }
+
+    public function availableSlots(Request $request)
+    {
+        $serviceId = $request->input('service_id');
+        $service = Service::findOrFail($serviceId);
+
+        // Załóżmy, że zabieg trwa 1h i dentysta pracuje 9-17
+        $startHour = 9;
+        $endHour = 17;
+        $daysToCheck = 7;
+        $slots = [];
+
+        for ($day = 0; $day < $daysToCheck; $day++) {
+            $date = Carbon::today()->addDays($day);
+            for ($hour = $startHour; $hour < $endHour; $hour++) {
+                $dateTime = $date->copy()->setHour($hour)->setMinute(0);
+                $exists = $service->reservations()
+                    ->whereDate('date_time', $dateTime->toDateString())
+                    ->whereTime('date_time', $dateTime->format('H:i:s'))
+                    ->exists();
+                if (!$exists) {
+                    $slots[] = $dateTime->format('Y-m-d\TH:i');
+                }
+            }
+        }
+        return response()->json($slots);
     }
 }

@@ -91,3 +91,4 @@ Route::post('/password/email', [\App\Http\Controllers\Auth\ForgotPasswordControl
 Route::get('/password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 Route::post('/reservation', [\App\Http\Controllers\ReservationController::class, 'store'])->name('reservation.store');
+Route::get('/reservation/available-slots', [App\Http\Controllers\ReservationController::class, 'availableSlots'])->name('reservation.availableSlots');
