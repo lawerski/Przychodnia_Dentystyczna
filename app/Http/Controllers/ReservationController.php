@@ -26,4 +26,30 @@ class ReservationController extends Controller
 
         return back()->with('accepted', 'Rezerwacja zaakceptowana.');
     }
+
+    public function cancel(Reservation $reservation)
+    {
+
+        if (!in_array($reservation->status, [$this->pending, $this->confirmed])) {
+            return back()->with('error', 'Tylko oczekujące lub potwierdzone rezerwacje mogą być anulowane.');
+        }
+        
+        $reservation->status = 'anulowana';
+        $reservation->save();
+
+        return back()->with('success', 'Rezerwacja została anulowana pomyślnie.');
+    }
+
+  
+    public function complete(Reservation $reservation)
+    {
+        if ($reservation->status !== $this->confirmed) {
+            return back()->with('error', 'Tylko potwierdzone rezerwacje mogą być oznaczone jako wykonane.');
+        }
+        
+        $reservation->status = 'wykonana';
+        $reservation->save();
+        
+        return back()->with('success', 'Zabieg został oznaczony jako wykonany.');
+    }
 }
