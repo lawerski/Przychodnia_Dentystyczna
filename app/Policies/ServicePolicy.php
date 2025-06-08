@@ -30,16 +30,13 @@ class ServicePolicy
      */
     public function create(User $user, CreateServiceRequest $request): bool
     {
-        if ($user->type === 'admin') {
+        if ($user->hasRole('admin')) {
             return true; // Admins can create services
         }
 
-        if ($user->type == 'dentist') {
+        if ($user->hasRole('dentist')) {
             $dentist = $user->dentist;
-            if ($request['dentist_id'] == $dentist->id) {
-                return true;
-            }
-            return false;
+            return $request['dentist_id'] == $dentist->id;
         }
         return false;
     }
@@ -49,10 +46,10 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        if ($user->type === 'admin') {
+        if ($user->hasRole('admin')) {
             return true; // Admins can delete any service
         }
-        if ($user->type !== 'dentist') {
+        if (!$user->hasRole('dentist')) {
             return false;
         }
         $dentist = $user->dentist;
@@ -68,10 +65,10 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service): bool
     {
-        if ($user->type === 'admin') {
+        if ($user->hasRole('admin')) {
             return true; // Admins can delete any service
         }
-        if ($user->type !== 'dentist') {
+        if (!$user->hasRole('dentist')) {
             return false;
         }
         $dentist = $user->dentist;

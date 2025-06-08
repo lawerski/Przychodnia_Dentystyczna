@@ -74,6 +74,7 @@ Route::post('register', [RegisterController::class, 'register']);
 
 // Services
 Route::middleware(['auth', 'role:admin,dentist'])->group( function () {
+    Route::get('admin/services', [ServiceController::class, 'index'])->name('admin.service.index');
     Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('service.edit');
     Route::put('/service/{service}/update', [ServiceController::class, 'update'])->name('service.update');
     Route::delete('/service/{service}/delete', [ServiceController::class, 'destroy'])->name('service.delete');

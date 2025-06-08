@@ -29,6 +29,15 @@ class ServiceController extends Controller
             $q->where('cost', '<=', request()->get('cost_max'));
             })
             ->paginate(15);
+
+        if (auth()->user()->hasRole('admin')) {
+            return view('admin.service.index', [
+                'services' => $services,
+                'dentists' => Dentist::all(),
+                'max_cost' => Service::max('cost'),
+            ]);
+        }
+
         return view('service.index', [
             'services' => $services,
             'dentists' => Dentist::all(),
@@ -74,8 +83,13 @@ class ServiceController extends Controller
         // Create the service with the validated data
         $service = Service::create($validatedData);
 
-        return redirect()->route('service.edit', $service)
+        if (auth()->user()->hasRole('admin')) {
+            return redirect()->route('admin.service.index')
             ->with('success', 'Usługa została dodana pomyślnie.');
+        } else {
+            return redirect()->route('dentist.services')
+            ->with('success', 'Usługa została dodana pomyślnie.');
+        }
     }
 
     /**
@@ -138,7 +152,7 @@ class ServiceController extends Controller
     {
         $this->authorize('delete', $service);
         $service->delete();
-        return redirect()->route('dentist.services')
+        return redirect()->back()
             ->with('success', 'Usługa została usunięta pomyślnie.');
     }
 }
