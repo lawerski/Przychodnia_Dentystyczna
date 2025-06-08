@@ -12,13 +12,23 @@ class PatientPanelController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        // Historia zrealizowanych zabiegów
         $reservations = \App\Models\Reservation::with(['service.dentist'])
             ->where('user_id', $user->id)
             ->whereIn('status', ['wykonana', 'potwierdzona'])
             ->orderByDesc('date_time')
             ->get();
 
-        return view('patient.dashboard', compact('reservations', 'user'));
+        // Nadchodzące zabiegi do kalendarza
+        $upcoming = \App\Models\Reservation::with(['service.dentist'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['oczekująca', 'potwierdzona'])
+            ->where('date_time', '>=', now())
+            ->orderBy('date_time')
+            ->get();
+
+        return view('patient.dashboard', compact('reservations', 'upcoming', 'user'));
     }
     public function editProfile()
     {
