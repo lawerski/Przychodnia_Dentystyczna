@@ -64,24 +64,26 @@
         <tbody>
             @foreach($services as $service)
             <tr>
-                <td>
+                <td class="align-middle">
                     <a href="{{ route('service.show', $service->id) }}" class="" style="cursor: pointer; text-decoration: none; color: inherit;">
-                        <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
+                    <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
                     </a>
                 </td>
-                <td>{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
-                <td>{{ $service->cost }} zł</td>
-                <td>
-                    <a href="{{ route('service.edit', $service->id) }}" class="btn btn-sm btn-primary me-1" title="Edytuj">
-                        Edytuj
-                    </a>
-                    <form action="{{ route('service.delete', $service->id) }}" method="POST" style="display:inline-block;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" title="Usuń">
-                            Usuń
-                        </button>
-                    </form>
+                <td class="align-middle">{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
+                <td class="align-middle">{{ $service->cost }} zł</td>
+                <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('service.edit', $service->id) }}" class="btn btn-sm btn-primary me-2" title="Edytuj">
+                            Edytuj
+                        </a>
+                        <form action="{{ route('service.delete', $service->id) }}" method="POST" style="display:inline-block; margin-bottom: 0;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" title="Usuń" style="margin-left: 9px;">
+                                Usuń
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             @endforeach

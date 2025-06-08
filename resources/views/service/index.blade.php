@@ -56,21 +56,21 @@
         <tbody>
             @foreach($services as $service)
             <tr>
-            <td>
-            <a href="{{ route('service.show', $service->id) }}" class="" style="cursor: pointer; text-decoration: none; color: inherit;">
-            <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
-            </a>
-            </td>
-            <td>{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
-            <td>{{ $service->cost }} zł</td>
-            <td>
-            @guest
-            <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
-            @else
-            {{-- TODO: Add reservations --}}
-            <a href="#" class="btn btn-success btn-sm">Rezerwacja</a>
-            @endguest
-            </td>
+                <td class="align-middle">
+                    <a href="{{ route('service.show', $service->id) }}" class="" style="cursor: pointer; text-decoration: none; color: inherit;">
+                        <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
+                    </a>
+                </td>
+                <td class="align-middle">{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
+                <td class="align-middle">{{ $service->cost }} zł</td>
+                <td class="align-middle">
+                @guest
+                    <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
+                @else
+                    {{-- TODO: Add reservations --}}
+                    <a href="#" class="btn btn-success btn-sm">Rezerwacja</a>
+                @endguest
+                </td>
             </tr>
             @endforeach
         </tbody>
