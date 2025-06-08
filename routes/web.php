@@ -63,10 +63,12 @@ Route::middleware(['auth', 'dentist'])->group(function () {
 
         Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
         Route::get('/dentist/totp', 'generateTotpSecret')->name('dentist.totp');
+    });
 
-        Route::controller(ReservationController::class)->group(function () {
-            Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
-        });
+    Route::controller(ReservationController::class)->group(function () {
+        Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
+        Route::put('/reservation/{reservation}/cancel', 'cancel')->name('reservation.cancel');
+        Route::put('/reservation/{reservation}/complete', 'complete')->name('reservation.complete');
     });
 });
 

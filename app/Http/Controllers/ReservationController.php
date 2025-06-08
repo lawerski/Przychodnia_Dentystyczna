@@ -17,6 +17,8 @@ class ReservationController extends Controller
 
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
+    private $completed = 'wykonana';
+    private $cancelled = 'anulowana';
 
     // Wyświetl listę rezerwacji
     public function index()
@@ -82,7 +84,7 @@ class ReservationController extends Controller
         $reservation->user_id = $user->id;
         $reservation->service_id = $request->service_id;
         $reservation->date_time = $request->date_time;
-        $reservation->status = 'oczekująca';
+        $reservation->status = $this->pending;
         $reservation->submitted_at = now();
         $reservation->save();
 
@@ -163,15 +165,15 @@ class ReservationController extends Controller
     public function accept(Reservation $reservation)
     {
         if ($reservation->status == $this->confirmed) {
-            return back()->with('error', 'Reservation already accepted.');
+            return back()->with('error', 'Rezerwacja jest już potwierdzona.');
         }
         if ($reservation->status !== $this->pending) {
-            return back()->with('error', 'Reservation cannot be accepted.');
+            return back()->with('error', 'Tylko oczekujące rezerwacje mogą być potwierdzone.');
         }
         $reservation->status = $this->confirmed;
         $reservation->save();
 
-        return back()->with('accepted', 'Rezerwacja zaakceptowana.');
+        return back()->with('success', 'Rezerwacja została potwierdzona.');
     }
 
     public function availableSlots(Request $request)
@@ -201,3 +203,29 @@ class ReservationController extends Controller
         return response()->json($slots);
     }
 }
+
+    public function cancel(Reservation $reservation)
+    {
+        if (!in_array($reservation->status, [$this->pending, $this->confirmed])) {
+            return back()->with('error', 'Tylko oczekujące lub potwierdzone rezerwacje mogą być anulowane.');
+        }
+        
+        $reservation->status = $this->cancelled;
+        $reservation->save();
+
+        return back()->with('success', 'Rezerwacja została anulowana.');
+    }
+
+    public function complete(Reservation $reservation)
+    {
+        if ($reservation->status !== $this->confirmed) {
+            return back()->with('error', 'Tylko potwierdzone rezerwacje mogą być oznaczone jako wykonane.');
+        }
+        
+        $reservation->status = $this->completed;
+        $reservation->save();
+        
+        return back()->with('success', 'Zabieg został oznaczony jako wykonany.');
+    }
+}
+

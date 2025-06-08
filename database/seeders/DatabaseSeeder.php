@@ -46,5 +46,6 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('1234'), // password
             'type' => 'admin',
         ]);
+        
     }
 }
