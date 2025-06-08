@@ -79,9 +79,30 @@
         @endforeach
     </div>
 
-    <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
-        {{ $dentists->links() }}
+        <nav aria-label="Nawigacja stronicowania">
+            <ul class="pagination">
+                @if($dentists->onFirstPage())
+                    <li class="page-item disabled">
+                        <span class="page-link">Poprzedni</span>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $dentists->previousPageUrl() }}" rel="prev">Poprzedni</a>
+                    </li>
+                @endif
+
+                @if($dentists->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $dentists->nextPageUrl() }}" rel="next">Następny</a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link">Następny</span>
+                    </li>
+                @endif
+            </ul>
+        </nav>
     </div>
 </div>
 @endsection
