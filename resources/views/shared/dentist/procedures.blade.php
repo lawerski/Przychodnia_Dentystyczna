@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @if (session('accepted'))
-    <div class="alert alert-success container mt-4" id="success-alert">
+    <div class="alert alert-success container mt-4" id="accepted-alert">
         {{ session('accepted') }}
-        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
+        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('accepted-alert').remove();"></button>
     </div>
 @endif
 @if (session('success'))
