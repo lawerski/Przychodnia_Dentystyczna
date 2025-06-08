@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use OTPHP\TOTP;
+
 class DentistPanelController extends Controller
 {
     // In case the names change in the future only this needs to be updated
@@ -69,7 +70,6 @@ class DentistPanelController extends Controller
      */
     public function history()
     {
-
         try {
             $dentist = $this->getDentist();
 
@@ -87,23 +87,6 @@ class DentistPanelController extends Controller
                         'status' => $reservation->status,
                     ];
                 });
-
-            $dentist = $this->getDentist();
-            $offeredServicesIds = $dentist->services->pluck('id');
-            $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
-                ->whereIn('status', [$this->cancelled, $this->completed])
-                ->with(['user', 'service'])
-                ->orderBy('date_time', 'asc')
-                ->get()
-                ->map(function ($reservation) {
-                return [
-                    'patient_name' => $reservation->user->username ?? '',
-                    'service_name' => $reservation->service->service_name ?? '',
-                    'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
-                    'status' => $reservation->status,
-                ];
-            });
-
 
             return view('dentist.history', [
                 'procedures' => $procedures,
@@ -298,6 +281,7 @@ class DentistPanelController extends Controller
             return redirect()->route('login')->withErrors(['error' => 'Nie masz uprawnień do tej strony.']);
         }
     }
+    
     /**
      * Get data for calendar view.
      */
