@@ -15,10 +15,10 @@ use OTPHP\TOTP;
 class DentistPanelController extends Controller
 {
     // In case the names change in the future only this needs to be updated
-    private $completed = 'wykonana';
-    private $cancelled = 'anulowana';
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
+    private $completed = 'wykonana';
+    private $cancelled = 'anulowana';
 
     private function getDentist()
     {
