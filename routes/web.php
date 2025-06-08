@@ -42,6 +42,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // Panel pacjenta
 Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->group(function () {
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
+    Route::post('/reservation/{reservation}/cancel', [PatientPanelController::class, 'cancelReservation'])->name('reservation.cancel');
     Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/history', [PatientPanelController::class, 'history'])->name('history'); // Dodaj to

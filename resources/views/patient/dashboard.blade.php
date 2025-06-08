@@ -25,7 +25,7 @@
                 <td>{{ $reservation->service->dentist->name ?? '' }} {{ $reservation->service->dentist->surname ?? '' }}</td>
                 <td>{{ \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i') }}</td>
                 <td>
-                    <span class="badge 
+                    <span class="badge
                         @if($reservation->status === 'wykonana') bg-success
                         @elseif($reservation->status === 'potwierdzona') bg-primary
                         @elseif($reservation->status === 'anulowana') bg-danger
@@ -51,6 +51,7 @@
                 <th>Zabieg</th>
                 <th>Dentysta</th>
                 <th>Status</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -60,13 +61,21 @@
                 <td>{{ $reservation->service->service_name ?? '-' }}</td>
                 <td>{{ $reservation->service->dentist->name ?? '' }} {{ $reservation->service->dentist->surname ?? '' }}</td>
                 <td>
-                    <span class="badge 
+                    <span class="badge
                         @if($reservation->status === 'potwierdzona') bg-primary
                         @elseif($reservation->status === 'oczekująca') bg-warning text-dark
                         @else bg-secondary
                         @endif">
                         {{ $reservation->status }}
                     </span>
+                </td>
+                <td>
+                    @if(in_array($reservation->status, ['oczekująca', 'potwierdzona']))
+                    <form method="POST" action="{{ route('patient.reservation.cancel', $reservation) }}" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Czy na pewno chcesz odwołać to spotkanie?')">Odwołaj</button>
+                    </form>
+                    @endif
                 </td>
             </tr>
             @endforeach

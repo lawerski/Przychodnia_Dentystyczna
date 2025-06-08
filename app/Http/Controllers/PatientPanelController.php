@@ -94,4 +94,18 @@ class PatientPanelController extends Controller
 
         return view('patient.history', compact('reservations'));
     }
+    public function cancelReservation(Reservation $reservation)
+    {
+        $user = Auth::user();
+        if ($reservation->user_id !== $user->id) {
+            return back()->with('error', 'Nie masz uprawnień do tej rezerwacji.');
+        }
+        if (!in_array($reservation->status, ['oczekująca', 'potwierdzona'])) {
+            return back()->with('error', 'Tylko nadchodzące rezerwacje można odwołać.');
+        }
+        $reservation->status = 'anulowana';
+        $reservation->save();
+
+        return back()->with('success', 'Rezerwacja została odwołana.');
+    }
 }
