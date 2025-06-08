@@ -39,7 +39,6 @@ class ReservationController extends Controller
         $user = Auth::user();
         try {
             $request->validate([
-                'user_id' => 'required|exists:users,id',
                 'service_id' => 'required|exists:services,id',
                 'date_time' => 'required|date|after:now',
             ]);
