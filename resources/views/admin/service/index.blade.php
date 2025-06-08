@@ -1,4 +1,4 @@
-@extends('layouts.main', ['pageTitle' => 'Zabiegi'])
+@extends('layouts.admin', ['pageTitle' => 'Zabiegi'])
 
 <style>
     .hover-unmuted {
@@ -16,16 +16,13 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
     <h2>Zabiegi</h2>
+    <a href="{{ route('service.create') }}" class="btn btn-success mb-3">
+        Dodaj nowy zabieg
+    </a>
     <form method="GET" action="{{ route('service.index') }}" class="row g-3 mb-4">
         <div class="col-md-3 d-flex align-items-end">
             <input type="text" name="service_name" class="form-control" placeholder="Nazwa zabiegu" value="{{ request('service_name') }}">
@@ -49,7 +46,6 @@
             <button type="submit" class="btn btn-primary ms-2">Filtruj</button>
             <a href="{{ route('service.index') }}" class="btn btn-secondary ms-2">Wyczyść</a>
         </div>
-
     </form>
     @if($services->isEmpty())
         <div class="alert alert-info" role="alert">
@@ -62,7 +58,7 @@
                 <th>Nazwa</th>
                 <th>Dentysta</th>
                 <th>Cena</th>
-                <th></th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -70,32 +66,24 @@
             <tr>
                 <td class="align-middle">
                     <a href="{{ route('service.show', $service->id) }}" class="" style="cursor: pointer; text-decoration: none; color: inherit;">
-                        <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
+                    <span class="hover-unmuted"><i class="bi bi-search"></i></span> {{ $service->service_name }}
                     </a>
                 </td>
-                <td>{{ $service->dentist->name }} {{ $service->dentist->surname }}</td>
-                <td>{{ $service->cost }} zł</td>
-                <td>
-                    @guest
-                        <a href="{{ route('login') }}" class="btn btn-success btn-sm">Rezerwacja</a>
-                    @else
-                        @if(auth()->user()->type === 'patient')
-                            <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#reservationForm{{ $service->id }}">
-                                Rezerwacja
+                <td class="align-middle">{{ $service->dentist->name.' '.$service->dentist->surname }}</td>
+                <td class="align-middle">{{ $service->cost }} zł</td>
+                <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('service.edit', $service->id) }}" class="btn btn-sm btn-primary me-2" title="Edytuj">
+                            Edytuj
+                        </a>
+                        <form action="{{ route('service.delete', $service->id) }}" method="POST" style="display:inline-block; margin-bottom: 0;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" title="Usuń" style="margin-left: 9px;">
+                                Usuń
                             </button>
-                            <div class="collapse mt-2" id="reservationForm{{ $service->id }}">
-                                <form action="{{ route('reservation.store') }}" method="POST" class="border rounded p-3 bg-light">
-                                    @csrf
-                                    <input type="hidden" name="service_id" value="{{ $service->id }}">
-                                    <div class="mb-2">
-                                        <label for="date_time_{{ $service->id }}" class="form-label">Wybierz termin</label>
-                                        <input type="datetime-local" name="date_time" id="date_time_{{ $service->id }}" class="form-control" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-sm">Zarezerwuj wizytę</button>
-                                </form>
-                            </div>
-                        @endif
-                    @endguest
+                        </form>
+                    </div>
                 </td>
             </tr>
             @endforeach
@@ -104,5 +92,4 @@
     @endif
     {{ $services->links('pagination::bootstrap-5') }}
 </div>
-
 @endsection
