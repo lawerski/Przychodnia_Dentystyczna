@@ -1,4 +1,4 @@
-@extends('layouts.dentist', ['pageTitle' => 'Moje dane'])
+@extends('layouts.app')
 
 @section('content')
 <div class="container mt-4" style="max-width:800px;">
@@ -150,11 +150,6 @@
             <a href="{{ route('dentist.dashboard') }}" class="btn btn-secondary">Anuluj</a>
         </div>
     </form>
-    
-    <div class="mt-3">
-        <a href="{{ route('dentist.totp') }}" class="btn btn-info">
-            <i class="bi bi-shield-lock"></i> Aktywuj TOTP (Google Authenticator)
-        </a>
-    </div>
+    <a href="{{ route('dentist.totp') }}" class="btn btn-info mt-3">Aktywuj TOTP (Google Authenticator)</a>
 </div>
 @endsection

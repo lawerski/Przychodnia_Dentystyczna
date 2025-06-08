@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DentistPanelController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\PublicDentistController; // Add this line
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -9,6 +10,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\PatientPanelController;
+
+use App\Http\Controllers\Admin\DentistController;
+
 use App\Http\Controllers\ServiceController;
 
 // Main page
@@ -23,6 +27,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
+     Route::resource('dentists', \App\Http\Controllers\Admin\DentistController::class);
 });
 
 // Panel pacjenta
@@ -44,12 +49,20 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist', 'show')->name('dentist.dashboard');
         Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
+
+        Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
+          Route::controller(ReservationController::class)->group(function () {
+        Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
+    });
         Route::get('/dentist/totp', 'generateTotpSecret')->name('dentist.totp');
     });
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
     });
 });
+// Publiczne trasy
+Route::get('/dentists', [PublicDentistController::class, 'index'])->name('dentists.index');
+Route::get('/dentists/{dentist}', [PublicDentistController::class, 'show'])->name('dentists.show');
 
 // Autoryzacja
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');

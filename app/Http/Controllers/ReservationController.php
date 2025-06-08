@@ -15,7 +15,6 @@ class ReservationController extends Controller
      */
     public function accept(Reservation $reservation)
     {
-        // TODO: Auth user should be a dentist with this reservation
         if ($reservation->status == $this->confirmed) {
             return back()->with('error', 'Reservation already accepted.');
         }
