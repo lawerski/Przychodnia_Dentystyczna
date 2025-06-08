@@ -51,10 +51,8 @@ class ReservationController extends Controller
         // Sprawdź czy godzina mieści się w przedziale 9:00-15:00 (pełne godziny)
         $hour = (int)$dateTime->format('H');
         $minute = (int)$dateTime->format('i');
-        if ($hour < 9 || $hour > 15) {
-
-            return redirect()->back()->with('error', 'Możesz wybrać tylko pełną godzinę między 9:00 a 15:00 (np. 09:00, 10:00, ... 15:00).');
-
+        if ($hour < 9 || $hour > 15 || !in_array($minute, [0, 15, 30, 45])) {
+            return redirect()->back()->with('error', 'Możesz wybrać tylko godziny między 9:00 a 15:00 oraz minuty 00, 15, 30 lub 45.')->withInput();
         }
 
 
