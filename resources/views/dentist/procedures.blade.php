@@ -5,24 +5,25 @@
         <h1 class="mt-4">Zabiegi dentystyczne</h1>
         <p>W tej sekcji możesz przeglądać i zarządzać zabiegami dentystycznymi.</p>
 
-        @if (session('accepted'))
+        <?php
+        if (session('accepted')): ?>
             <div class="alert alert-success container mt-4" id="success-alert">
                 {{ session('accepted') }}
                 <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
             </div>
-        @endif
-        @if (session('success'))
+        <?php endif;
+        if (session('success')): ?>
             <div class="alert alert-success container mt-4" id="success-alert">
                 {{ session('success') }}
                 <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
             </div>
-        @endif
-        @if (session('error'))
+        <?php endif;
+        if (session('error')): ?>
             <div class="alert alert-danger container mt-4" id="error-alert">
                 {{ session('error') }}
                 <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('error-alert').remove();"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="row">
             <div class="col-md-12">

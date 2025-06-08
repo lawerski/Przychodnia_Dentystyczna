@@ -1,13 +1,20 @@
+@extends('layouts.app')
 @if (session('accepted'))
     <div class="alert alert-success container mt-4" id="success-alert">
         {{ session('accepted') }}
         <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
     </div>
 @endif
-@if (session('error'))
+@if (session('success'))
     <div class="alert alert-success container mt-4" id="success-alert">
-        {{ session('error') }}
+        {{ session('success') }}
         <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
+    </div>
+@endif
+@if (session('error'))
+    <div class="alert alert-danger container mt-4" id="error-alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('error-alert').remove();"></button>
     </div>
 @endif
 
@@ -45,15 +52,36 @@
                             {{ $procedure['status'] }}
                         </span>
                     </td>
-                    <td class="p-1 align-middle">
-                    @if ($procedure['status'] === 'oczekująca')
-                        <form action="{{ route('reservation.accept', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('PUT')
-                            <button type="submit" class="btn btn-primary btn-sm px-2 py-1">Potwierdź</button>
-                        </form>
+                    @if (request()->routeIs('dentist.upcoming'))
+                        <td class="p-1 align-middle">
+                            @if ($procedure['status'] === 'oczekująca')
+                                <form action="{{ route('reservation.accept', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-primary btn-sm px-2 py-1">Potwierdź</button>
+                                </form>
+                            @endif
+                            
+                            @if ($procedure['status'] === 'potwierdzona')
+                                <form action="{{ route('reservation.complete', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success btn-sm px-2 py-1">Wykonano</button>
+                                </form>
+                            @endif
+                            
+                            @if (in_array($procedure['status'], ['oczekująca', 'potwierdzona']))
+                                <form action="{{ route('reservation.cancel', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline; margin-left: 5px;">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-danger btn-sm px-2 py-1" 
+                                            onclick="return confirm('Czy na pewno chcesz anulować tę rezerwację?')">
+                                        Anuluj
+                                    </button>
+                                </form>
+                            @endif
+                        </td>
                     @endif
-                    </td>
                 </tr>
             @endforeach
         </tbody>
