@@ -45,5 +45,8 @@
         @enderror
     </div>
 
-    <button type="submit" class="btn btn-primary">Dodaj usługę</button>
+    <div class="d-flex justify-content-between">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">Powrót</a>
+        <button type="submit" class="btn btn-primary">Dodaj usługę</button>
+    </div>
 </form>

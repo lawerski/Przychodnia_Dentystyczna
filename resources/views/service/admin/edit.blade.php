@@ -52,5 +52,8 @@
         @enderror
     </div>
 
-    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+    <div class="d-flex justify-content-between">
+        <a href="{{ route('admin.service.index') }}" class="btn btn-secondary">Powrót</a>
+        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+    </div>
 </form>

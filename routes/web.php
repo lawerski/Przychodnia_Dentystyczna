@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::get('/dentists', [PublicDentistController::class, 'index'])->name('dentists.index');
 Route::get('/services', [ServiceController::class, 'index'])->name('service.index');
 Route::get('/dentists/{dentist}', [\App\Http\Controllers\DentistController::class, 'show'])->name('dentists.show');
+Route::get('/services/service/{service}', [ServiceController::class, 'show'])->name('service.show');
 
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
+    Route::resource('dentists', \App\Http\Controllers\Admin\DentistController::class);
+    Route::get('services', [ServiceController::class, 'index'])->name('service.index');
 });
 
 // Panel pacjenta
