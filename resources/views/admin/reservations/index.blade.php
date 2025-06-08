@@ -21,7 +21,7 @@
                 <tr>
                     <td>{{ $reservation->id }}</td>
                     <td>{{ $reservation->user->username ?? '' }}</td>
-                    <td>{{ $reservation->service->name ?? '' }}</td>
+                    <td>{{ $reservation->service->service_name ?? '' }}</td>
                     <td>{{ $reservation->date_time }}</td>
                     <td>
                         <span class="badge
