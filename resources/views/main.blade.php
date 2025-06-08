@@ -6,6 +6,7 @@
         <h2 class="text-center mb-4">Witamy w przychodni dentystycznej</h2>
         <div class="d-flex flex-column gap-2">
             <a href="{{ route('service.index') }}" class="btn btn-primary">Przeglądaj oferty</a>
+            <a href="{{ route('dentists.index') }}" class="btn btn-primary">Nasi dentyści</a>
             @guest
                 <a href="{{ route('login') }}" class="btn btn-outline-secondary">Mój profil</a>
             @else

@@ -23,7 +23,7 @@ class ServiceController extends Controller
             $q->where('dentist_id', request()->get('dentist_id'));
             })
             ->when(request()->filled('service_name'), function ($q) {
-            $q->where('service_name', 'like', '%' . request()->get('service_name') . '%');
+                $q->whereRaw('LOWER(service_name) LIKE ?', ['%' . strtolower(request()->get('service_name')) . '%']);
             })
             ->when(request()->filled('cost_max'), function ($q) {
             $q->where('cost', '<=', request()->get('cost_max'));

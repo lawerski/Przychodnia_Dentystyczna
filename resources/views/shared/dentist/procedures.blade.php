@@ -36,7 +36,7 @@
                     <td>{{ $procedure['patient_name'] }}</td>
                     <td>{{ $procedure['date'] }}</td>
                     <td>
-                        <span class="badge 
+                        <span class="badge
                             @if ($procedure['status'] === 'anulowana' || $procedure['status'] === 'odrzucona') bg-danger
                             @elseif ($procedure['status'] === 'wykonana') bg-info
                             @elseif ($procedure['status'] === 'oczekująca') bg-warning text-dark
@@ -45,15 +45,15 @@
                             {{ $procedure['status'] }}
                         </span>
                     </td>
+                    <td class="p-1 align-middle">
                     @if ($procedure['status'] === 'oczekująca')
-                        <td class="p-1 align-middle">
-                            <form action="{{ route('reservation.accept', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-primary btn-sm px-2 py-1">Potwierdź</button>
-                            </form>
-                        </td>
+                        <form action="{{ route('reservation.accept', ['reservation' => $procedure['reservation']]) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-primary btn-sm px-2 py-1">Potwierdź</button>
+                        </form>
                     @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>
