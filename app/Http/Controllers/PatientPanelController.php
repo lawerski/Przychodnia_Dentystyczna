@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use OTPHP\TOTP;
+use App\Models\Reservation;
+
 class PatientPanelController extends Controller
 {
     public function index()
     {
-        return view('patient.dashboard');
+        $user = Auth::user();
+        $reservations = \App\Models\Reservation::with(['service.dentist'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['wykonana', 'potwierdzona'])
+            ->orderByDesc('date_time')
+            ->get();
+
+        return view('patient.dashboard', compact('reservations', 'user'));
     }
     public function editProfile()
     {
@@ -63,5 +72,16 @@ class PatientPanelController extends Controller
             'secret' => $user->totp_secret,
             'provisioningUri' => $provisioningUri,
         ]);
+    }
+    public function history()
+    {
+        $user = Auth::user();
+        $reservations = Reservation::with(['service.dentist'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['wykonana', 'potwierdzona'])
+            ->orderByDesc('date_time')
+            ->get();
+
+        return view('patient.history', compact('reservations'));
     }
 }

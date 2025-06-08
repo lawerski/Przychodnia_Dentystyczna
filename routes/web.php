@@ -44,6 +44,7 @@ Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->gro
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
     Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/history', [PatientPanelController::class, 'history'])->name('history'); // Dodaj to
     Route::get('/totp', [PatientPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
