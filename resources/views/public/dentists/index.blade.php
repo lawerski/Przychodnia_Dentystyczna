@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main', ['pageTitle' => 'Nasi Dentyści'])
 
 @section('content')
 <div class="container mt-4">
@@ -8,9 +8,9 @@
     <form action="{{ route('dentists.index') }}" method="GET" class="mb-4">
         <div class="row g-3">
             <div class="col-md-4">
-                <input type="text" 
-                       name="search" 
-                       class="form-control" 
+                <input type="text"
+                       name="search"
+                       class="form-control"
                        placeholder="Szukaj po imieniu, nazwisku lub specjalizacji..."
                        value="{{ request('search') }}">
             </div>
@@ -50,7 +50,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     @if($dentist->image_path)
-                        <img src="{{ asset('storage/' . $dentist->image_path) }}" 
+                        <img src="{{ asset('storage/' . $dentist->image_path) }}"
                              class="card-img-top mb-3 rounded-circle mx-auto d-block"
                              alt="Zdjęcie {{ $dentist->name }}"
                              style="width: 150px; height: 150px; object-fit: cover;">
@@ -60,7 +60,7 @@
                             <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
                         </div>
                     @endif
-                    
+
                     <h5 class="card-title text-center mb-3">
                         {{ $dentist->name }} {{ $dentist->surname }}
                     </h5>
@@ -68,7 +68,7 @@
                         {{ $dentist->specialization }}
                     </p>
                     <div class="text-center">
-                        <a href="{{ route('dentists.show', $dentist) }}" 
+                        <a href="{{ route('dentists.show', $dentist) }}"
                            class="btn btn-outline-primary">
                             Zobacz profil
                         </a>
@@ -78,31 +78,7 @@
         </div>
         @endforeach
     </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <nav aria-label="Nawigacja stronicowania">
-            <ul class="pagination">
-                @if($dentists->onFirstPage())
-                    <li class="page-item disabled">
-                        <span class="page-link">Poprzedni</span>
-                    </li>
-                @else
-                    <li class="page-item">
-                        <a class="page-link" href="{{ $dentists->previousPageUrl() }}" rel="prev">Poprzedni</a>
-                    </li>
-                @endif
-
-                @if($dentists->hasMorePages())
-                    <li class="page-item">
-                        <a class="page-link" href="{{ $dentists->nextPageUrl() }}" rel="next">Następny</a>
-                    </li>
-                @else
-                    <li class="page-item disabled">
-                        <span class="page-link">Następny</span>
-                    </li>
-                @endif
-            </ul>
-        </nav>
-    </div>
+    <br>
+    {{ $dentists->links('pagination::bootstrap-5') }}
 </div>
 @endsection

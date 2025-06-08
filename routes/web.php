@@ -20,6 +20,11 @@ Route::get('/', function () {
     return view('main');
 })->name('main');
 
+// Publiczne trasy
+Route::get('/dentists', [PublicDentistController::class, 'index'])->name('dentists.index');
+Route::get('/services', [ServiceController::class, 'index'])->name('service.index');
+Route::get('/dentists/{dentist}', [\App\Http\Controllers\DentistController::class, 'show'])->name('dentists.show');
+
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
@@ -27,7 +32,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/profile', [AdminPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [AdminPanelController::class, 'updateProfile'])->name('profile.update');
     Route::get('/totp', [AdminPanelController::class, 'generateTotpSecret'])->name('totp');
-     Route::resource('dentists', \App\Http\Controllers\Admin\DentistController::class);
+    Route::resource('dentists', \App\Http\Controllers\Admin\DentistController::class);
 });
 
 // Panel pacjenta
@@ -51,18 +56,13 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
 
         Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
-          Route::controller(ReservationController::class)->group(function () {
-        Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
-    });
         Route::get('/dentist/totp', 'generateTotpSecret')->name('dentist.totp');
-    });
-    Route::controller(ReservationController::class)->group(function () {
-        Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
+
+        Route::controller(ReservationController::class)->group(function () {
+            Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
+        });
     });
 });
-// Publiczne trasy
-Route::get('/dentists', [PublicDentistController::class, 'index'])->name('dentists.index');
-Route::get('/dentists/{dentist}', [PublicDentistController::class, 'show'])->name('dentists.show');
 
 // Autoryzacja
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -79,8 +79,6 @@ Route::middleware(['auth', 'role:admin,dentist'])->group( function () {
     Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
     Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
 });
-
-Route::get('/services', [ServiceController::class, 'index'])->name('service.index');
 
 // Totp
 Route::post('/totp-verify', [LoginController::class, 'verifyTotp'])->name('totp.verify');

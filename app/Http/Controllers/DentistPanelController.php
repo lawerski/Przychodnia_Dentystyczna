@@ -19,18 +19,20 @@ class DentistPanelController extends Controller
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
 
-    private function getAuthenticatedDentist()
+    private function getDentist()
     {
         $user = Auth::user();
-        $dentist = Dentist::where('user_id', $user->id)->firstOrFail();
-        return $dentist;
+        if (!$user || !$user->dentist) {
+            return null;
+        }
+        return $user->dentist;
     }
 
     public function show()
     {
         try {
-            $dentist = $this->getAuthenticatedDentist();
-            
+            $dentist = $this->getDentist();
+
             $offeredServicesIds = $dentist->services->pluck('id');
             $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
                 ->whereIn('status', [$this->completed, $this->cancelled])
@@ -60,48 +62,6 @@ class DentistPanelController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['error' => 'Nie masz uprawnień do tej strony.']);
         }
-
-    private function getDentist()
-    {
-        $user = Auth::user();
-        if (!$user || !$user->dentist) {
-            return null;
-        }
-        return $user->dentist;
-    }
-
-    public function show()
-    {
-        $dentist = $this->getDentist();
-        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
-
-        $offeredServicesIds = $dentist->services->pluck('id');
-        $completedProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
-            ->whereIn('status', [$this->completed, $this->cancelled])
-            ->count();
-        $upcomingProceduresCount = Reservation::whereIn('service_id', $offeredServicesIds)
-            ->whereIn('status', [$this->pending, $this->confirmed])
-            ->count();
-
-        $reviews = $dentist->reviews()
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get()
-            ->map(function ($review) {
-                return [
-                    'rating' => $review->rating,
-                    'comment' => $review->comment,
-                    'created_at' => \Carbon\Carbon::parse($review->created_at)->format('Y-m-d'),
-                ];
-            });
-
-        return view('dentist.show', [
-            'dentist' => $dentist,
-            'completed_procedures_count' => $completedProceduresCount,
-            'upcoming_procedures_count' => $upcomingProceduresCount,
-            'reviews' => $reviews,
-        ]);
-
     }
 
     /**
@@ -111,8 +71,8 @@ class DentistPanelController extends Controller
     {
 
         try {
-            $dentist = $this->getAuthenticatedDentist();
-            
+            $dentist = $this->getDentist();
+
             $offeredServicesIds = $dentist->services->pluck('id');
             $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
                 ->whereIn('status', [$this->cancelled, $this->completed])
@@ -128,20 +88,20 @@ class DentistPanelController extends Controller
                     ];
                 });
 
-        $dentist = $this->getDentist();
-        $offeredServicesIds = $dentist->services->pluck('id');
-        $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
-            ->whereIn('status', [$this->cancelled, $this->completed])
-            ->with(['user', 'service'])
-            ->orderBy('date_time', 'asc')
-            ->get()
-            ->map(function ($reservation) {
-            return [
-                'patient_name' => $reservation->user->username ?? '',
-                'service_name' => $reservation->service->service_name ?? '',
-                'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
-                'status' => $reservation->status,
-            ];
+            $dentist = $this->getDentist();
+            $offeredServicesIds = $dentist->services->pluck('id');
+            $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
+                ->whereIn('status', [$this->cancelled, $this->completed])
+                ->with(['user', 'service'])
+                ->orderBy('date_time', 'asc')
+                ->get()
+                ->map(function ($reservation) {
+                return [
+                    'patient_name' => $reservation->user->username ?? '',
+                    'service_name' => $reservation->service->service_name ?? '',
+                    'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
+                    'status' => $reservation->status,
+                ];
             });
 
 
@@ -158,10 +118,9 @@ class DentistPanelController extends Controller
      */
     public function upcoming()
     {
-
         try {
-            $dentist = $this->getAuthenticatedDentist();
-            
+            $dentist = $this->getDentist();
+
             $offeredServicesIds = $dentist->services->pluck('id');
             $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
                 ->whereIn('status', [$this->pending, $this->confirmed])
@@ -176,27 +135,7 @@ class DentistPanelController extends Controller
                         'status' => $reservation->status,
                         'reservation' => $reservation,
                     ];
-
-        $dentist = $this->getDentist();
-        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
-
-        $offeredServicesIds = $dentist->services->pluck('id');
-        $procedures = Reservation::whereIn('service_id', $offeredServicesIds)
-            ->whereIn('status', [$this->pending, $this->confirmed])
-            ->with(['user', 'service'])
-            ->orderBy('date_time', 'asc')
-            ->get()
-            ->map(function ($reservation) {
-            return [
-                'patient_name' => $reservation->user->username ?? '',
-                'service_name' => $reservation->service->service_name ?? '',
-                'date' => \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i'),
-                'status' => $reservation->status,
-                'reservation' => $reservation,
-            ];
-            });
-
-
+                });
             return view('dentist.upcoming', ['procedures' => $procedures]);
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['error' => 'Nie masz uprawnień do tej strony.']);
@@ -206,14 +145,14 @@ class DentistPanelController extends Controller
     public function editProfile()
     {
         $user = Auth::user();
-        $dentist = Dentist::where('user_id', $user->id)->firstOrFail();
+        $dentist = $this->getDentist();
         return view('dentist.profile', compact('user', 'dentist'));
     }
 
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
-        $dentist = Dentist::where('user_id', $user->id)->firstOrFail();
+        $dentist = $this->getDentist();
 
         $validated = $request->validate([
             'username' => [
@@ -299,12 +238,12 @@ class DentistPanelController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         try {
             if (!empty($validated['password'])) {
                 $validated['password'] = bcrypt($validated['password']);
             }
-            
+
             $user->update([
                 'username' => $validated['username'],
                 'email' => $validated['email'],
@@ -336,12 +275,11 @@ class DentistPanelController extends Controller
         }
     }
 
- 
     public function reviews()
     {
         try {
-            $dentist = $this->getAuthenticatedDentist();
-            
+            $dentist = $this->getDentist();
+
             $reviews = Review::where('dentist_id', $dentist->id)
                 ->orderBy('created_at', 'desc')
                 ->get()
@@ -359,7 +297,7 @@ class DentistPanelController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors(['error' => 'Nie masz uprawnień do tej strony.']);
         }
-
+    }
     /**
      * Get data for calendar view.
      */
@@ -384,26 +322,7 @@ class DentistPanelController extends Controller
             'procedures' => $procedures,
         ]);
     }
-    /**
-     * Get anonimized reviews for dentist.
-     */
-    public function reviews()
-    {
-        $dentist = $this->getDentist();
-        if (!$dentist) return redirect()->back()->withErrors(['Dentist not found.']);
 
-        $reviews = Review::where('dentist_id', $dentist->id);
-        return view('dentist.review', [
-            'reviews' => $reviews->get()->map(function ($review) {
-                return [
-                    'rating' => $review->rating,
-                    'comment' => $review->comment,
-                    'created_at' => \Carbon\Carbon::parse($review->created_at)->format('Y-m-d'),
-                ];
-            }),
-        ]);
-
-    }
     /**
      * Offered procedures.
      */

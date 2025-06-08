@@ -1,5 +1,5 @@
 
-@extends('layouts.app')
+@extends('layouts.admin', ['pageTitle' => 'Zarządzanie Dentystami'])
 
 @section('content')
 <div class="container mt-4">
@@ -33,8 +33,8 @@
                 <tr>
                     <td>
                         @if($dentist->image_path)
-                            <img src="{{ asset('storage/' . $dentist->image_path) }}" 
-                                 alt="Zdjęcie {{ $dentist->name }}" 
+                            <img src="{{ asset('storage/' . $dentist->image_path) }}"
+                                 alt="Zdjęcie {{ $dentist->name }}"
                                  class="rounded-circle"
                                  style="width: 50px; height: 50px; object-fit: cover;">
                         @else
@@ -52,17 +52,17 @@
                     <td>{{ $dentist->user->username }}</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="{{ route('admin.dentists.edit', $dentist) }}" 
+                            <a href="{{ route('admin.dentists.edit', $dentist) }}"
                                class="btn btn-sm btn-warning me-2">
                                 <i class="bi bi-pencil-fill"></i> Edytuj
                             </a>
-                            <form action="{{ route('admin.dentists.destroy', $dentist) }}" 
-                                  method="POST" 
+                            <form action="{{ route('admin.dentists.destroy', $dentist) }}"
+                                  method="POST"
                                   class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" 
-                                        class="btn btn-sm btn-danger" 
+                                <button type="submit"
+                                        class="btn btn-sm btn-danger"
                                         onclick="return confirm('Czy na pewno chcesz usunąć tego dentystę?')">
                                     <i class="bi bi-trash-fill"></i> Usuń
                                 </button>
