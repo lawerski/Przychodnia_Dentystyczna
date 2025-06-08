@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.patient', ['pageTitle' => 'Panel Pacjent'])
 
 @section('content')
 <div class="container mt-4">

@@ -13,28 +13,19 @@
                     <a class="nav-link" href="{{ route('dentist.upcoming') }}">Nadchodzące zabiegi</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dentist.services') }}">Moje ofery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dentist.calendar') }}">Kalendarz zabiegów</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('dentist.reviews') }}">Oceny</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="">
-                        <i class="bi bi-arrow-bar-left"></i> Wróć na stronę główną
-                    </a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
-                    {{-- TODO: Add auth --}}
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('dentist.dashboard') }}">Panel Dentysty</a></li>
-                        <li><a class="dropdown-item" href="">Wyloguj</a></li>
-                    </ul>
-                </li>
-                <li class="pr-5">
-                    <button class="nav-link" onclick="themeToggle()"> <i class="bi-moon-stars"></i></button>
-                </li>
+                @include('shared.navbar_back')
+                @include('shared.navbar_dropdown')
+                @include('shared.navbar_theme')
             </ul>
         </div>
     </div>

@@ -1,11 +1,13 @@
 @if (session('accepted'))
-    <div class="alert alert-success fade-message" role="alert" onclick="this.remove()">
+    <div class="alert alert-success container mt-4" id="success-alert">
         {{ session('accepted') }}
+        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
     </div>
 @endif
 @if (session('error'))
-    <div class="alert alert-danger fade-message" role="alert" onclick="this.remove()">
+    <div class="alert alert-success container mt-4" id="success-alert">
         {{ session('error') }}
+        <button type="button" class="btn-close float-end" aria-label="Close" onclick="document.getElementById('success-alert').remove();"></button>
     </div>
 @endif
 

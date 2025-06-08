@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth', ['pageTitle' => 'Logowanie'])
 
 @section('content')
 <div class="container mt-4" style="max-width:400px;">
@@ -22,7 +22,11 @@
                 </ul>
             </div>
         @endif
+        <div class="mt-3">
+            <a href="{{ route('password.request') }}">Nie pamiętam hasła</a>
+        </div>
         <button type="submit" class="btn btn-primary">Zaloguj</button>
     </form>
+
 </div>
 @endsection

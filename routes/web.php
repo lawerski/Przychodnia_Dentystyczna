@@ -10,8 +10,15 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\PatientPanelController;
+
 use App\Http\Controllers\Admin\DentistController;
 
+use App\Http\Controllers\ServiceController;
+
+// Main page
+Route::get('/', function () {
+    return view('main');
+})->name('main');
 
 // Panel admina
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -37,13 +44,17 @@ Route::middleware(['auth', 'dentist'])->group(function () {
         Route::get('/dentist/history', 'history')->name('dentist.history');
         Route::get('/dentist/upcoming', 'upcoming')->name('dentist.upcoming');
         Route::get('/dentist/reviews', 'reviews')->name('dentist.reviews');
+        Route::get('/dentist/services', 'services')->name('dentist.services');
+        Route::get('/dentist/calendar', 'calendar')->name('dentist.calendar');
         Route::get('/dentist', 'show')->name('dentist.dashboard');
         Route::get('/dentist/profile', 'editProfile')->name('dentist.profile.edit');
         Route::post('/dentist/profile', 'updateProfile')->name('dentist.profile.update');
+
         Route::get('/dentist/totp', [DentistPanelController::class, 'generateTotpSecret'])->name('dentist.totp');
           Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
     });
+        Route::get('/dentist/totp', 'generateTotpSecret')->name('dentist.totp');
     });
     Route::controller(ReservationController::class)->group(function () {
         Route::put('/reservation/{reservation}/accept', 'accept')->name('reservation.accept');
@@ -60,4 +71,18 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
 
+// Services
+Route::middleware(['auth', 'role:admin,dentist'])->group( function () {
+    Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('service.edit');
+    Route::put('/service/{service}/update', [ServiceController::class, 'update'])->name('service.update');
+    Route::delete('/service/{service}/delete', [ServiceController::class, 'destroy'])->name('service.delete');
+    Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
+    Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
+});
+
+// Totp
 Route::post('/totp-verify', [LoginController::class, 'verifyTotp'])->name('totp.verify');
+Route::get('/password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/password/email', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
