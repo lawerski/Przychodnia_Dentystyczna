@@ -87,3 +87,4 @@ Route::get('/password/reset', [\App\Http\Controllers\Auth\ForgotPasswordControll
 Route::post('/password/email', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
+Route::post('/reservation', [\App\Http\Controllers\ReservationController::class, 'store'])->name('reservation.store');
