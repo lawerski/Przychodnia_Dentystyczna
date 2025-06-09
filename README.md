@@ -1,123 +1,207 @@
-## Wstęp
+# Projekt AI1
 
-Projekt aplikacji internetowej, którego celem jest stworzenie systemu do zarządzania przychodnią dentystyczną. Aplikacja wspiera zarówno pracowników, jak i pacjentów, oferując szereg funkcjonalności dostosowanych do różnych ról użytkowników.
+[Repozytorium projektu](https://github.com/users/abackia/repo1)
 
-Główne funkcje aplikacji obejmują:
+[Tablica projektowa](https://github.com/users/abackia/projects/1)
 
-- Rejestrację i logowanie użytkowników
-- Panele dedykowane dla Administratora, Dentysty oraz Pacjenta
-- Rezerwację i zarządzanie wizytami
-- Dwuskładnikową autoryzację (TOTP)
-- Dynamiczne obrazki
-- Zarządzanie dentystami, usługami oraz danymi pacjentów
-- Obsługę ocen
-- Obsługę rabatów
+---
 
-## Baza danych
+### Temat projektu
 
-Wykonane są migracje i seedery
+System do zarządzania rezerwacjami w przychodni dentystycznej.
+
+---
+
+### Zespół X
+
+| Profil | Rola |
+| ------ | ------ |
+| [abackia](https://github.com/abackia) | lider zespołu |
+| [bbacki](https://github.com/bbacki) | członek zespołu |
+| [dadadadasas](https://github.com/dadadadasas) | członek zespołu |
+
+---
+
+## Opis projektu
+
+Projekt aplikacji internetowej, którego celem jest stworzenie systemu do zarządzania przychodnią dentystyczną. Aplikacja wspiera zarówno pracowników, jak i pacjentów, oferując szereg funkcjonalności dostosowanych do różnych ról użytkowników. Użytkownicy niezalogowani mogą przeglądać listę dentystów wraz z ich specjalizacjami i opiniami, a także zapoznać się ze statystykami popularności zabiegów.
+
+Po zalogowaniu, w zależności od posiadanej roli (Pacjent, Dentysta, Administrator), użytkownik zyskuje dostęp do dedykowanego panelu z zaawansowanymi funkcjonalnościami.
+
+Dostępne funkcjonalności:
+*   **Rejestracja i logowanie użytkowników** z opcjonalną weryfikacją dwuetapową (TOTP).
+*   **System ról użytkowników** (Administrator, Dentysta, Pacjent) z dedykowanymi panelami.
+*   **Zarządzanie kontem:** każdy użytkownik może edytować swoje dane w panelu.
+*   **Resetowanie hasła** (token generowany w konsoli).
+*   **Panel Administratora:**
+    *   Pełna obsługa **CRUD** (Create, Read, Update, Delete) dla zasobu dentystów (dane lekarza, specjalizacja, zdjęcie).
+    *   Zarządzanie kontami użytkowników.
+*   **Panel Dentysty:**
+    *   Zarządzanie swoimi danymi jako lekarza.
+    *   Kalendarz z zaplanowanymi zabiegami.
+    *   Potwierdzanie lub odrzucanie rezerwacji złożonych przez pacjentów.
+*   **Panel Pacjenta:**
+    *   Zapisywanie się na wybrane zabiegi u konkretnego dentysty w dostępnym terminie.
+    *   Kalendarz z zaplanowanymi wizytami.
+    *   Możliwość odwołania umówionej wizyty.
+    *   Historia zrealizowanych zabiegów.
+    *   Możliwość ocenienia dentysty (w skali 1-5) i dodania komentarza po odbytej wizycie.
+*   **Funkcjonalności publiczne (dla niezalogowanych):**
+    *   Przeglądanie profili dentystów z opcjami filtrowania, sortowania i paginacją.
+    *   Wyświetlanie statystyk popularności zabiegów z ostatniego miesiąca w formie wykresu.
+    *   Dynamiczne ładowanie zdjęć profilowych dentystów.
+*   **Inteligentne sugestie:** Propozycja najbliższego możliwego terminu wizyty i dostępnego dentysty.
+
+### Narzędzia i technologie
+*   **Backend:** PHP 8.1+, Laravel 10.x
+*   **Frontend:** Blade, Bootstrap 5, JavaScript
+*   **Baza danych:** MySQL / MariaDB
+*   **Serwer:** Apache / Nginx
+*   **Zarządzanie zależnościami:** Composer
+*   **Biblioteki:** `spomky-labs/otphp` (do obsługi TOTP)
+
+### Uruchomienie aplikacji
+
+Do uruchomienia aplikacji wymagane jest zainstalowane środowisko deweloperskie z PHP, Composerem oraz serwerem bazy danych (np. XAMPP, Laragon, Docker).
+
+1.  Sklonuj repozytorium i przejdź do katalogu projektu.
+2.  Zainstaluj zależności za pomocą Composera.
+3.  Skopiuj plik `.env.example` do `.env` i skonfiguruj połączenie z bazą danych.
+4.  Wygeneruj klucz aplikacji.
+5.  Uruchom migracje i seedery, aby utworzyć strukturę bazy danych i wypełnić ją przykładowymi danymi.
+6.  Uruchom serwer deweloperski.
 
 ```bash
-php artisan migrate
-```
+# Instalacja zależności
+composer install
 
-```bash
-php artisan db:seed
-```
+# Konfiguracja środowiska (należy ręcznie skopiować plik .env.example i uzupełnić dane DB)
+cp .env.example .env
+php artisan key:generate
+
+# Migracja i wypełnienie bazy danych
+php artisan migrate --seed
+
+# Uruchomienie serwera deweloperskiego
+php artisan serve
+
+Aplikacja będzie dostępna pod adresem `http://127.0.0.1:8000`.
+
+Przykładowi użytkownicy aplikacji:
+*   administrator: `admin@example.com` / `password`
+*   dentysta: `dentysta@example.com` / `password`
+*   pacjent: `pacjent@example.com` / `password`
+
+### Baza danych
+
+![Diagram ERD](./docs-img/erd.png)
 
 <details>
-<summary><b>Tabele w bazie</b></summary>
+<summary><b>Tabele w bazie danych</b></summary>
 
-Tabela users:
-| Kolumna         | Typ      | Opis                                       |
+Tabela `users`:
+| Kolumna | Typ | Opis |
 | --------------- | -------- | ------------------------------------------ |
-| id              | int      | ID użytkownika (PK)                        |
-| username        | string   | Nazwa użytkownika                          |
-| email           | string   | Adres e-mail                               |
-| phone           | string   | Numer telefonu                             |
-| password        | string   | Hasło                                      |
-| type            | string   | Typ użytkownika (admin, dentysta, pacjent) |
-| remember\_token | string   | Token zapamiętujący sesję                  |
-| created\_at     | datetime | Data utworzenia                            |
-| updated\_at     | datetime | Data aktualizacji                          |
-| totp\_secret    | string   | Sekret do autoryzacji TOTP                 |
+| id | int | ID użytkownika (PK) |
+| username | string | Nazwa użytkownika |
+| email | string | Adres e-mail |
+| phone | string | Numer telefonu |
+| password | string | Hasło |
+| type | string | Typ użytkownika (admin, dentysta, pacjent) |
+| remember_token | string | Token zapamiętujący sesję |
+| created_at | datetime | Data utworzenia |
+| updated_at | datetime | Data aktualizacji |
+| totp_secret | string | Sekret do autoryzacji TOTP |
 
-Tabela dentists:
-| Kolumna         | Typ      | Opis                |
+Tabela `dentists`:
+| Kolumna | Typ | Opis |
 | --------------- | -------- | ------------------- |
-| id              | int      | ID dentysty (PK)    |
-| user\_id        | int      | ID użytkownika (FK) |
-| name            | string   | Imię                |
-| surname         | string   | Nazwisko            |
-| specialization  | string   | Specjalizacja       |
-| license\_number | string   | Numer licencji      |
-| image\_path     | string   | Ścieżka do zdjęcia  |
-| created\_at     | datetime | Data utworzenia     |
-| updated\_at     | datetime | Data aktualizacji   |
+| id | int | ID dentysty (PK) |
+| user_id | int | ID użytkownika (FK) |
+| name | string | Imię |
+| surname | string | Nazwisko |
+| specialization | string | Specjalizacja |
+| license_number | string | Numer licencji |
+| image_path | string | Ścieżka do zdjęcia |
+| created_at | datetime | Data utworzenia |
+| updated_at | datetime | Data aktualizacji |
 
-Tabela services:
-| Kolumna       | Typ      | Opis                                 |
+Tabela `services`:
+| Kolumna | Typ | Opis |
 | ------------- | -------- | ------------------------------------ |
-| id            | int      | ID usługi (PK)                       |
-| dentist\_id   | int      | ID dentysty wykonującego usługę (FK) |
-| service\_name | string   | Nazwa usługi                         |
-| cost          | decimal  | Koszt usługi                         |
-| created\_at   | datetime | Data utworzenia                      |
-| updated\_at   | datetime | Data aktualizacji                    |
+| id | int | ID usługi (PK) |
+| dentist_id | int | ID dentysty wykonującego usługę (FK) |
+| service_name | string | Nazwa usługi |
+| cost | decimal | Koszt usługi |
+| created_at | datetime | Data utworzenia |
+| updated_at | datetime | Data aktualizacji |
 
-Tabela reservations:
-| Kolumna      | Typ      | Opis                     |
+Tabela `reservations`:
+| Kolumna | Typ | Opis |
 | ------------ | -------- | ------------------------ |
-| id           | int      | ID rezerwacji (PK)       |
-| user\_id     | int      | ID użytkownika (FK)      |
-| service\_id  | int      | ID usługi (FK)           |
-| date\_time   | datetime | Termin wizyty            |
-| status       | string   | Status rezerwacji        |
-| submited\_at | datetime | Data złożenia rezerwacji |
-| created\_at  | datetime | Data utworzenia          |
-| updated\_at  | datetime | Data aktualizacji        |
+| id | int | ID rezerwacji (PK) |
+| user_id | int | ID użytkownika (FK) |
+| service_id | int | ID usługi (FK) |
+| date_time | datetime | Termin wizyty |
+| status | string | Status rezerwacji |
+| submited_at | datetime | Data złożenia rezerwacji |
+| created_at | datetime | Data utworzenia |
+| updated_at | datetime | Data aktualizacji |
 
-Tabela coupons:
-| Kolumna              | Typ      | Opis                   |
+Tabela `coupons`:
+| Kolumna | Typ | Opis |
 | -------------------- | -------- | ---------------------- |
-| id                   | int      | ID kuponu (PK)         |
-| user\_id             | int      | ID użytkownika (FK)    |
-| service\_id          | int      | ID usługi (FK)         |
-| coupon\_code         | string   | Kod kuponu             |
-| discount\_percentage | decimal  | Procent zniżki         |
-| valid\_until         | datetime | Termin ważności        |
-| is\_used             | boolean  | Czy kupon został użyty |
-| created\_at          | datetime | Data utworzenia        |
-| updated\_at          | datetime | Data aktualizacji      |
+| id | int | ID kuponu (PK) |
+| user_id | int | ID użytkownika (FK) |
+| service_id | int | ID usługi (FK) |
+| coupon_code | string | Kod kuponu |
+| discount_percentage | decimal | Procent zniżki |
+| valid_until | datetime | Termin ważności |
+| is_used | boolean | Czy kupon został użyty |
+| created_at | datetime | Data utworzenia |
+| updated_at | datetime | Data aktualizacji |
 
-Tabela reviews:
-| Kolumna     | Typ      | Opis                |
+Tabela `reviews`:
+| Kolumna | Typ | Opis |
 | ----------- | -------- | ------------------- |
-| id          | int      | ID opinii (PK)      |
-| dentist\_id | int      | ID dentysty (FK)    |
-| user\_id    | int      | ID użytkownika (FK) |
-| rating      | int      | Ocena (np. 1–5)     |
-| comment     | string   | Komentarz           |
-| created\_at | datetime | Data utworzenia     |
-| updated\_at | datetime | Data aktualizacji   |
+| id | int | ID opinii (PK) |
+| dentist_id | int | ID dentysty (FK) |
+| user_id | int | ID użytkownika (FK) |
+| rating | int | Ocena (np. 1–5) |
+| comment | string | Komentarz |
+| created_at | datetime | Data utworzenia |
+| updated_at | datetime | Data aktualizacji |
 
 </details>
 
-<!-- ## Modele
+## Widoki aplikacji
 
-Stworzonych jest 6 modeli:
+![Strona główna - lista dentystów i statystyki](./docs-img/widok-strona-glowna.png)
+*Strona główna - lista dentystów i statystyki*
 
-- Coupon
-- Dentist
-- Reservation
-- Review
-- Service
-- User -->
+![Logowanie (z opcją TOTP)](./docs-img/widok-logowanie.png)
+*Logowanie (z opcją TOTP)*
 
-## Panel dentysty
+![Rejestracja nowego użytkownika](./docs-img/widok-rejestracja.png)
+*Rejestracja nowego użytkownika*
 
-Na stronie głównej panelu użytkownika znajdują się podstawowe informacje o profilu oraz szybki dostęp do historii zabiegów i nadchodzących wizyt. Dodatkowo prezentowane są trzy najnowsze opinie pacjentów.
+![Panel administratora - operacje CRUD na dentystach](./docs-img/widok-admin-crud-dentysci.png)
+*Panel administratora - operacje CRUD na dentystach*
 
-Dentysta ma możliwość zarządzania swoimi usługami bezpośrednio z poziomu panelu — może je dodawać, edytować oraz usuwać. Dostępne są również dedykowane widoki: kalendarz zabiegów oraz sekcja ocen i opinii od pacjentów.
+![Panel dentysty - kalendarz wizyt](./docs-img/widok-dentysta-kalendarz.png)
+*Panel dentysty - kalendarz wizyt*
 
-W sekcji nadchodzących usług dentysta może potwierdzać lub odrzucać zaplanowane wizyty.
+![Panel dentysty - potwierdzanie wizyt](./docs-img/widok-dentysta-potwierdzanie.png)
+*Panel dentysty - potwierdzanie wizyt*
+
+![Panel pacjenta - historia zabiegów](./docs-img/widok-pacjent-historia.png)
+*Panel pacjenta - historia zabiegów*
+
+![Profil publiczny dentysty z ocenami i komentarzami](./docs-img/widok-profil-dentysty.png)
+*Profil publiczny dentysty z ocenami i komentarzami*
+
+![Rezerwacja wizyty](./docs-img/widok-rezerwacja.png)
+*Rezerwacja wizyty*
+
+![Profil użytkownika z opcją edycji danych i włączenia TOTP](./docs-img/widok-profil-uzytkownika.png)
+*Profil użytkownika z opcją edycji danych i włączenia TOTP*
