@@ -120,16 +120,16 @@ class DentistController extends Controller
     {
         $user = Auth::user();
 
-        // Warunek do odkomentowania, jeśli chcesz ograniczyć tylko do pacjentów po zabiegu:
-        // $hadProcedure = \App\Models\Reservation::where('user_id', $user->id)
-        //     ->whereHas('service', function($q) use ($dentist) {
-        //         $q->where('dentist_id', $dentist->id);
-        //     })
-        //     ->where('status', 'wykonana')
-        //     ->exists();
-        // if (!$hadProcedure) {
-        //     return back()->with('error', 'Możesz ocenić dentystę tylko po wykonanym zabiegu.');
-        // }
+
+         $hadProcedure = \App\Models\Reservation::where('user_id', $user->id)
+            ->whereHas('service', function($q) use ($dentist) {
+                $q->where('dentist_id', $dentist->id);
+            })
+            ->where('status', 'wykonana')
+            ->exists();
+         if (!$hadProcedure) {
+           return back()->with('error', 'Możesz ocenić dentystę tylko po wykonanym zabiegu.');
+         }
 
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
