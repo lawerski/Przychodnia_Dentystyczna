@@ -134,7 +134,7 @@ class ReservationController extends Controller
                 $q->where('dentist_id', $dentistId);
             })
             ->whereDate('date_time', $dateTime->toDateString())
-            ->whereTime('date_time', $dateTime->format('H'))
+            ->whereTime('date_time', $dateTime->format('H:i:s'))
             ->where('id', '!=', $reservation->id)
             ->where('status', '!=', 'anulowana')
             ->exists();
