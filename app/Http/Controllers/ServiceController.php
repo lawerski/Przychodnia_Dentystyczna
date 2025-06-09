@@ -32,12 +32,15 @@ class ServiceController extends Controller
             })
             ->paginate(15);
 
-        if (auth()->user()->hasRole('admin')) {
-            return view('admin.service.index', [
+        if (auth()->user()) {
+            if (auth()->user()->hasRole('admin')) {
+                return view('admin.service.index', [
                 'services' => $services,
                 'dentists' => Dentist::all(),
                 'max_cost' => Service::max('cost'),
-            ]);
+                ]);
+            }
+
         }
 
         return view('service.index', [
