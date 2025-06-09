@@ -1,4 +1,4 @@
-# Projekt AI1
+![image](https://github.com/user-attachments/assets/ff4bae92-18fc-4048-8fcd-a8db5ebecaa6)# Projekt AI1
 
 [Repozytorium projektu](https://github.com/lawerski/Przychodnia_Dentystyczna) - repo projektu
 
@@ -188,7 +188,7 @@ Tabela `reviews`:
 ![Panel administratora - operacje CRUD na dentystach](./docs-img/widok-admin-crud-dentysci.png)
 *Panel administratora - operacje CRUD na dentystach*
 
-![Panel dentysty - kalendarz wizyt](./docs-img/widok-dentysta-kalendarz.png)
+![Panel dentysty - kalendarz wizyt](./docs-img/widok-dentysta-kalendarz-wizyt.png)
 *Panel dentysty - kalendarz wizyt*
 
 ![Panel dentysty - potwierdzanie wizyt](./docs-img/widok-dentysta-potwierdzanie.png)
@@ -197,7 +197,7 @@ Tabela `reviews`:
 ![Panel pacjenta - historia zabiegów](./docs-img/widok-pacjent-historia.png)
 *Panel pacjenta - historia zabiegów*
 
-![Profil publiczny dentysty z ocenami i komentarzami](./docs-img/widok-profil-dentysty.png)
+![Profil publiczny dentysty z ocenami i komentarzami](./docs-img/widok-dentysta.png)
 *Profil publiczny dentysty z ocenami i komentarzami*
 
 ![Rezerwacja wizyty](./docs-img/widok-rezerwacja.png)
