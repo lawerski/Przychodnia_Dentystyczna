@@ -12,6 +12,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('dentists.index') }}">Dentyści</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('service.stats') }}">Statystyki zabiegów</a>
+                </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @if (!request()->routeIs('main'))

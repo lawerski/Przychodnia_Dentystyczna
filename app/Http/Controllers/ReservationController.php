@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,6 +17,8 @@ class ReservationController extends Controller
 
     private $pending = 'oczekująca';
     private $confirmed = 'potwierdzona';
+    private $completed = 'wykonana';
+    private $cancelled = 'anulowana';
 
     // Wyświetl listę rezerwacji
     public function index()
@@ -81,7 +84,7 @@ class ReservationController extends Controller
         $reservation->user_id = $user->id;
         $reservation->service_id = $request->service_id;
         $reservation->date_time = $request->date_time;
-        $reservation->status = 'oczekująca';
+        $reservation->status = $this->pending;
         $reservation->submitted_at = now();
         $reservation->save();
 
@@ -162,14 +165,66 @@ class ReservationController extends Controller
     public function accept(Reservation $reservation)
     {
         if ($reservation->status == $this->confirmed) {
-            return back()->with('error', 'Reservation already accepted.');
+            return back()->with('error', 'Rezerwacja jest już potwierdzona.');
         }
         if ($reservation->status !== $this->pending) {
-            return back()->with('error', 'Reservation cannot be accepted.');
+            return back()->with('error', 'Tylko oczekujące rezerwacje mogą być potwierdzone.');
         }
         $reservation->status = $this->confirmed;
         $reservation->save();
 
-        return back()->with('accepted', 'Rezerwacja zaakceptowana.');
+        return back()->with('success', 'Rezerwacja została potwierdzona.');
+    }
+
+
+    public function availableSlots(Request $request)
+    {
+        $serviceId = $request->input('service_id');
+        $service = Service::findOrFail($serviceId);
+
+        // Załóżmy, że zabieg trwa 1h i dentysta pracuje 9-17
+        $startHour = 9;
+        $endHour = 17;
+        $daysToCheck = 7;
+        $slots = [];
+
+        for ($day = 0; $day < $daysToCheck; $day++) {
+            $date = Carbon::today()->addDays($day);
+            for ($hour = $startHour; $hour < $endHour; $hour++) {
+                $dateTime = $date->copy()->setHour($hour)->setMinute(0);
+                $exists = $service->reservations()
+                    ->whereDate('date_time', $dateTime->toDateString())
+                    ->whereTime('date_time', $dateTime->format('H:i:s'))
+                    ->exists();
+                if (!$exists) {
+                    $slots[] = $dateTime->format('Y-m-d\TH:i');
+                }
+            }
+        }
+        return response()->json($slots);
+    }
+
+    public function cancel(Reservation $reservation)
+    {
+        if (!in_array($reservation->status, [$this->pending, $this->confirmed])) {
+            return back()->with('error', 'Tylko oczekujące lub potwierdzone rezerwacje mogą być anulowane.');
+        }
+
+        $reservation->status = $this->cancelled;
+        $reservation->save();
+
+        return back()->with('success', 'Rezerwacja została anulowana.');
+    }
+
+    public function complete(Reservation $reservation)
+    {
+        if ($reservation->status !== $this->confirmed) {
+            return back()->with('error', 'Tylko potwierdzone rezerwacje mogą być oznaczone jako wykonane.');
+        }
+
+        $reservation->status = $this->completed;
+        $reservation->save();
+
+        return back()->with('success', 'Zabieg został oznaczony jako wykonany.');
     }
 }

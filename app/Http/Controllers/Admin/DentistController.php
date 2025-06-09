@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Dentist;
 use App\Models\User;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DentistController extends Controller
 {
@@ -109,5 +111,38 @@ class DentistController extends Controller
         $dentist->delete();
         return redirect()->route('admin.dentists.index')
             ->with('success', 'Dentysta usunięty');
+    }
+
+    /**
+     * Dodaj opinię do dentysty (widoczne dla wszystkich zalogowanych, warunek zakomentowany)
+     */
+    public function addReview(Request $request, Dentist $dentist)
+    {
+        $user = Auth::user();
+
+        // Warunek do odkomentowania, jeśli chcesz ograniczyć tylko do pacjentów po zabiegu:
+        // $hadProcedure = \App\Models\Reservation::where('user_id', $user->id)
+        //     ->whereHas('service', function($q) use ($dentist) {
+        //         $q->where('dentist_id', $dentist->id);
+        //     })
+        //     ->where('status', 'wykonana')
+        //     ->exists();
+        // if (!$hadProcedure) {
+        //     return back()->with('error', 'Możesz ocenić dentystę tylko po wykonanym zabiegu.');
+        // }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        Review::create([
+            'user_id' => $user->id,
+            'dentist_id' => $dentist->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return back()->with('success', 'Dziękujemy za ocenę!');
     }
 }
