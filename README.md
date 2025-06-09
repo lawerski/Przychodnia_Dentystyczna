@@ -188,6 +188,15 @@ Tabela `reviews`:
 ![Panel administratora - operacje CRUD na dentystach](./docs-img/widok-admin-crud-dentysci.png)
 *Panel administratora - operacje CRUD na dentystach*
 
+![Panel administratora - operacje CRUD na użytkownikach](./docs-img/widok-admin-crud-uzytkownicy.png)
+*Panel administratora - operacje CRUD na użytkownikach*
+
+![Panel administratora - operacje CRUD na usługach](./docs-img/widok-admin-crud-zabiegi.png)
+*Panel administratora - operacje CRUD na usługach*
+
+![Panel administratora - operacje CRUD na rezerwacjach](./docs-img/widok-admin-crud-rezerwacje.png)
+*Panel administratora - operacje CRUD na rezerwacjach*
+
 ![Panel dentysty - kalendarz wizyt](./docs-img/widok-dentysta-kalendarz-wizyt.png)
 *Panel dentysty - kalendarz wizyt*
 
