@@ -91,6 +91,8 @@ Aplikacja będzie dostępna pod adresem `http://127.0.0.1:8000`.
 
 Przykładowi użytkownicy aplikacji:
 *   administrator: `test@example.com` / `1234`
+*   dentysta: `dentist@example.com` / `1234`
+*   pacjent: `patient@example.com` / `1234`
 
 ### Baza danych
 
