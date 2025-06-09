@@ -46,5 +46,38 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('1234'), // password
             'type' => 'admin',
         ]);
+
+        User::factory()->create([
+            'id' => 998,
+            'username' => 'Dentist',
+            'email' => 'Dentist@example.com',
+            'phone' => '1234567890',
+            'password' => bcrypt('1234'), // password
+            'type' => 'dentist',
+        ]);
+        User::factory()->create([
+            'id' => 997,
+            'username' => 'Patient',
+            'email' => 'Patient@example.com',
+            'phone' => '1234567890',
+            'password' => bcrypt('1234'), // password
+            'type' => 'patient',
+        ]);
+
+        Dentist::factory()->create([
+            'id' => 999,
+            'user_id' => 998, // Dentist user
+            'name' => 'Dentysta Testowy',
+            'surname' => 'Testowy',
+            'specialization' => 'Stomatologia',
+            'license_number' => 'ASD123456789',
+        ]);
+
+        Service::factory()->create([
+            'id' => 999,
+            'dentist_id' => 999, // Dentist user
+            'service_name' => 'Usługa Testowa',
+            'cost' => 100.00,
+        ]);
     }
 }
