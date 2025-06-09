@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/ff4bae92-18fc-4048-8fcd-a8db5ebecaa6)# Projekt AI1
+# Projekt AI1
 
 [Repozytorium projektu](https://github.com/lawerski/Przychodnia_Dentystyczna) - repo projektu
 
