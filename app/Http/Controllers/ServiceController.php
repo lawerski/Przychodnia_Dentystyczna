@@ -10,6 +10,8 @@ use App\Models\Dentist;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Models\Reservation;
+use Carbon\Carbon;
 
 class ServiceController extends Controller
 {
@@ -154,5 +156,18 @@ class ServiceController extends Controller
         $service->delete();
         return redirect()->back()
             ->with('success', 'Usługa została usunięta pomyślnie.');
+    }
+
+    /**
+     * Display statistics for the services.
+     */
+    public function stats()
+    {
+        $monthAgo = Carbon::now()->subMonth();
+        $stats = Service::withCount(['reservations' => function($q) use ($monthAgo) {
+            $q->where('status', 'wykonana')->where('date_time', '>=', $monthAgo);
+        }])->orderByDesc('reservations_count')->get();
+
+        return view('service.stats', compact('stats'));
     }
 }
