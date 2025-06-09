@@ -1,8 +1,8 @@
 # Projekt AI1
 
-[Repozytorium projektu](https://github.com/users/abackia/repo1)
+[Repozytorium projektu](https://github.com/lawerski/Przychodnia_Dentystyczna) - repo projektu
 
-[Tablica projektowa](https://github.com/users/abackia/projects/1)
+[Tablica projektowa](https://github.com/users/lawerski/projects/5)
 
 ---
 
@@ -90,9 +90,7 @@ php artisan serve
 Aplikacja będzie dostępna pod adresem `http://127.0.0.1:8000`.
 
 Przykładowi użytkownicy aplikacji:
-*   administrator: `admin@example.com` / `password`
-*   dentysta: `dentysta@example.com` / `password`
-*   pacjent: `pacjent@example.com` / `password`
+*   administrator: `test@example.com` / `1234`
 
 ### Baza danych
 
