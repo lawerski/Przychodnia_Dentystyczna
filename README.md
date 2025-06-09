@@ -12,13 +12,14 @@ System do zarządzania rezerwacjami w przychodni dentystycznej.
 
 ---
 
-### Zespół X
+### Zespół F3
 
 | Profil | Rola |
 | ------ | ------ |
-| [abackia](https://github.com/abackia) | lider zespołu |
-| [bbacki](https://github.com/bbacki) | członek zespołu |
-| [dadadadasas](https://github.com/dadadadasas) | członek zespołu |
+| [lawerski](https://github.com/lawerski) | lider zespołu |
+| [VanillaMile](https://github.com/VanillaMile) | członek zespołu |
+| [cr1spyyyy](https://github.com/cr1spyyyy) | członek zespołu |
+| [kacperklosek](https://github.com/kacperklosek) | członek zespołu |
 
 ---
 
@@ -34,7 +35,7 @@ Dostępne funkcjonalności:
 *   **Zarządzanie kontem:** każdy użytkownik może edytować swoje dane w panelu.
 *   **Resetowanie hasła** (token generowany w konsoli).
 *   **Panel Administratora:**
-    *   Pełna obsługa **CRUD** (Create, Read, Update, Delete) dla zasobu dentystów (dane lekarza, specjalizacja, zdjęcie).
+    *   Pełna obsługa **CRUD** (Create, Read, Update, Delete) dla zasobów (dane lekarza, specjalizacja, zdjęcie).
     *   Zarządzanie kontami użytkowników.
 *   **Panel Dentysty:**
     *   Zarządzanie swoimi danymi jako lekarza.
