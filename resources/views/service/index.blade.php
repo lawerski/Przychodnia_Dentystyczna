@@ -89,11 +89,36 @@
                                     <input type="hidden" name="service_id" value="{{ $service->id }}">
                                     <div class="mb-2">
                                         <label for="date_time_{{ $service->id }}" class="form-label">Wybierz termin</label>
-                                        <input type="datetime-local" name="date_time" id="date_time_{{ $service->id }}" class="form-control" required>
+                                        <input type="datetime-local" name="date_time" id="date_time_{{ $service->id }}" class="form-control mb-2" required>
+                                        <select class="form-select" id="availableSlots_{{ $service->id }}" style="margin-top: 5px;">
+                                            <option value="">Wybierz z dostępnych terminów...</option>
+                                        </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-sm">Zarezerwuj wizytę</button>
                                 </form>
                             </div>
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                document.querySelectorAll('[data-bs-target^="#reservationForm"]').forEach(function(btn) {
+                                    btn.addEventListener('click', function() {
+                                        var serviceId = btn.getAttribute('data-bs-target').replace('#reservationForm', '');
+                                        fetch(`/reservation/available-slots?service_id=${serviceId}`)
+                                            .then(response => response.json())
+                                            .then(slots => {
+                                                var select = document.getElementById('availableSlots_' + serviceId);
+                                                select.innerHTML = '<option value="">Wybierz z dostępnych terminów...</option>';
+                                                slots.forEach(slot => {
+                                                    select.innerHTML += `<option value="${slot}">${slot.replace('T', ' ')}</option>`;
+                                                });
+                                                // Po wybraniu slotu ustaw input datetime-local
+                                                select.onchange = function() {
+                                                    document.getElementById('date_time_' + serviceId).value = this.value;
+                                                };
+                                            });
+                                    });
+                                });
+                            });
+                            </script>
                         @endif
                     @endguest
                 </td>

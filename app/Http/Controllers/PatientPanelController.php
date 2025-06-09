@@ -5,11 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use OTPHP\TOTP;
+use App\Models\Reservation;
+
 class PatientPanelController extends Controller
 {
     public function index()
     {
-        return view('patient.dashboard');
+        $user = Auth::user();
+
+        // Historia zrealizowanych zabiegów
+        $reservations = \App\Models\Reservation::with(['service.dentist'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['wykonana', 'potwierdzona'])
+            ->orderByDesc('date_time')
+            ->get();
+
+        // Nadchodzące zabiegi do kalendarza
+        $upcoming = \App\Models\Reservation::with(['service.dentist'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['oczekująca', 'potwierdzona'])
+            ->where('date_time', '>=', now())
+            ->orderBy('date_time')
+            ->get();
+
+        return view('patient.dashboard', compact('reservations', 'upcoming', 'user'));
     }
     public function editProfile()
     {
@@ -63,5 +82,30 @@ class PatientPanelController extends Controller
             'secret' => $user->totp_secret,
             'provisioningUri' => $provisioningUri,
         ]);
+    }
+    public function history()
+    {
+        $user = Auth::user();
+        $reservations = Reservation::with(['service.dentist'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['wykonana', 'potwierdzona'])
+            ->orderByDesc('date_time')
+            ->get();
+
+        return view('patient.history', compact('reservations'));
+    }
+    public function cancelReservation(Reservation $reservation)
+    {
+        $user = Auth::user();
+        if ($reservation->user_id !== $user->id) {
+            return back()->with('error', 'Nie masz uprawnień do tej rezerwacji.');
+        }
+        if (!in_array($reservation->status, ['oczekująca', 'potwierdzona'])) {
+            return back()->with('error', 'Tylko nadchodzące rezerwacje można odwołać.');
+        }
+        $reservation->status = 'anulowana';
+        $reservation->save();
+
+        return back()->with('success', 'Rezerwacja została odwołana.');
     }
 }

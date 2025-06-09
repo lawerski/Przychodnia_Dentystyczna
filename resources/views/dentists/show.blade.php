@@ -47,6 +47,36 @@
     <div class="row mt-4">
         <div class="col-12 mb-3">
             <h1 class="fw-semibold">Opinie:</h1>
+            @if(session('success'))
+                <div class="alert alert-success mt-2">{{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger mt-2">{{ session('error') }}</div>
+            @endif
+
+            @if($canReview)
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="POST" action="{{ route('dentists.addReview', $dentist) }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Ocena:</label>
+                            <select name="rating" id="rating" class="form-select" required>
+                                <option value="">Wybierz ocenę</option>
+                                @for($i=1; $i<=5; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Komentarz:</label>
+                            <textarea name="comment" id="comment" class="form-control" rows="3" required maxlength="1000" placeholder="Napisz swoją opinię..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Opublikuj</button>
+                    </form>
+                </div>
+            </div>
+            @endif
         </div>
         @forelse($reviews as $review)
             <div class="col-md-4 mb-4">

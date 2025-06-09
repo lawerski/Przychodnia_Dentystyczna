@@ -42,8 +42,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // Panel pacjenta
 Route::middleware(['auth', 'patient'])->prefix('patient')->name('patient.')->group(function () {
     Route::get('/', [PatientPanelController::class, 'index'])->name('dashboard');
+    Route::post('/reservation/{reservation}/cancel', [PatientPanelController::class, 'cancelReservation'])->name('reservation.cancel');
     Route::get('/profile', [PatientPanelController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [PatientPanelController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/history', [PatientPanelController::class, 'history'])->name('history'); // Dodaj to
     Route::get('/totp', [PatientPanelController::class, 'generateTotpSecret'])->name('totp');
 });
 
@@ -93,3 +95,8 @@ Route::post('/password/email', [\App\Http\Controllers\Auth\ForgotPasswordControl
 Route::get('/password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 Route::post('/reservation', [\App\Http\Controllers\ReservationController::class, 'store'])->name('reservation.store');
+Route::get('/reservation/available-slots', [App\Http\Controllers\ReservationController::class, 'availableSlots'])->name('reservation.availableSlots');
+Route::get('/stats', [ServiceController::class, 'stats'])->name('service.stats');
+Route::post('/dentists/{dentist}/review', [DentistController::class, 'addReview'])
+    ->middleware('auth')
+    ->name('dentists.addReview');
