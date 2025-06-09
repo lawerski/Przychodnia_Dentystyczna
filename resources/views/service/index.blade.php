@@ -13,18 +13,12 @@
 @section('content')
 
 <div class="container mt-4">
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zamknij"></button>
-        </div>
-    @endif
+    <?php
+    if(session('success'))
+        echo '<div class="alert alert-success">'.session('success').'</div>';
+    if(session('error'))
+        echo '<div class="alert alert-danger">'.session('error').'</div>';
+    ?>
     <h2>Zabiegi</h2>
     <form method="GET" action="{{ route('service.index') }}" class="row g-3 mb-4">
         <div class="col-md-3 d-flex align-items-end">

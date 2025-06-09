@@ -32,6 +32,7 @@ class ReservationController extends Controller
     {
         $users = User::all();
         $services = Service::all();
+
         return view('admin.reservations.create', compact('users', 'services'));
     }
 
@@ -88,7 +89,7 @@ class ReservationController extends Controller
         $reservation->submitted_at = now();
         $reservation->save();
 
-        return redirect()->back()->with('success', 'Rezerwacja została złożona i oczekuje na potwierdzenie.');
+        return redirect()->route('service.index')->with('success', 'Rezerwacja została złożona i oczekuje na potwierdzenie!');
     }
 
     // Pokaż szczegóły rezerwacji
@@ -118,8 +119,8 @@ class ReservationController extends Controller
         $dateTime = \Carbon\Carbon::parse($request->date_time);
         $hour = (int)$dateTime->format('H');
         $minute = (int)$dateTime->format('i');
-        if ($hour < 9 || $hour > 15 || $minute != 0) {
-            return redirect()->back()->with('error', 'Możesz wybrać tylko pełną godzinę między 9:00 a 15:00 (np. 09:00, 10:00, ... 15:00).');
+        if ($hour < 9 || $hour > 15 || !in_array($minute, [0, 15, 30, 45])) {
+            return redirect()->back()->with('error', 'Możesz wybrać tylko godziny między 9:00 a 15:00 oraz minuty 00, 15, 30 lub 45.')->withInput();
         }
 
         $service = Service::find($request->service_id);
@@ -182,22 +183,34 @@ class ReservationController extends Controller
         $serviceId = $request->input('service_id');
         $service = Service::findOrFail($serviceId);
 
-        // Załóżmy, że zabieg trwa 1h i dentysta pracuje 9-17
         $startHour = 9;
-        $endHour = 17;
+        $endHour = 15;
         $daysToCheck = 7;
         $slots = [];
+        $now = Carbon::now();
 
         for ($day = 0; $day < $daysToCheck; $day++) {
             $date = Carbon::today()->addDays($day);
-            for ($hour = $startHour; $hour < $endHour; $hour++) {
-                $dateTime = $date->copy()->setHour($hour)->setMinute(0);
-                $exists = $service->reservations()
-                    ->whereDate('date_time', $dateTime->toDateString())
-                    ->whereTime('date_time', $dateTime->format('H:i:s'))
-                    ->exists();
-                if (!$exists) {
-                    $slots[] = $dateTime->format('Y-m-d\TH:i');
+            for ($hour = $startHour; $hour <= $endHour; $hour++) {
+                for ($minute = 0; $minute <= 45; $minute += 15) {
+                    // Nie dodawaj slotów po 15:00
+                    if ($hour === $endHour && $minute > 0) {
+                        continue;
+                    }
+                    $dateTime = $date->copy()->setHour($hour)->setMinute($minute)->setSecond(0);
+
+                    // Dla dzisiaj nie pokazuj godzin z przeszłości
+                    if ($date->isToday() && $dateTime->lessThan($now)) {
+                        continue;
+                    }
+
+                    $exists = $service->reservations()
+                        ->whereDate('date_time', $dateTime->toDateString())
+                        ->whereTime('date_time', $dateTime->format('H:i:s'))
+                        ->exists();
+                    if (!$exists) {
+                        $slots[] = $dateTime->format('Y-m-d\TH:i');
+                    }
                 }
             }
         }
