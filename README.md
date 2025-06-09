@@ -84,6 +84,7 @@ php artisan migrate --seed
 
 # Uruchomienie serwera deweloperskiego
 php artisan serve
+```
 
 Aplikacja będzie dostępna pod adresem `http://127.0.0.1:8000`.
 
