@@ -40,11 +40,29 @@ class DentistController extends Controller
         if (!$dentist) {
             return redirect()->back()->withErrors(['Dentist not found.']);
         }
+
+        // Warunek: czy użytkownik może dodać opinię (zakomentowany na razie)
+        // $canReview = false;
+        // if (auth()->check() && auth()->user()->hasRole('patient')) {
+        //     $canReview = \App\Models\Reservation::where('user_id', auth()->id())
+        //         ->whereHas('service', function($q) use ($dentist) {
+        //             $q->where('dentist_id', $dentist->id);
+        //         })
+        //         ->where('status', 'wykonana')
+        //         ->exists();
+        // } else {
+        //     $canReview = false;
+        // }
+
+        // Tymczasowo: formularz widoczny dla wszystkich zalogowanych
+        $canReview = auth()->check();
+
         return view('dentists.show', [
             'dentist' => $dentist,
             'reviews_count' => $dentist->reviews()->count(),
             'reviews' => $dentist->reviews()->orderBy('updated_at', 'desc')->paginate(6),
             'average_rating' => $dentist->reviews()->avg('rating'),
+            'canReview' => $canReview,
         ]);
     }
 

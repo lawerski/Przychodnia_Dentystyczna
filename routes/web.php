@@ -95,3 +95,6 @@ Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordControll
 Route::post('/reservation', [\App\Http\Controllers\ReservationController::class, 'store'])->name('reservation.store');
 Route::get('/reservation/available-slots', [App\Http\Controllers\ReservationController::class, 'availableSlots'])->name('reservation.availableSlots');
 Route::get('/stats', [ServiceController::class, 'stats'])->name('service.stats');
+Route::post('/dentists/{dentist}/review', [DentistController::class, 'addReview'])
+    ->middleware('auth')
+    ->name('dentists.addReview');
